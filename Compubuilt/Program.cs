@@ -1,11 +1,19 @@
+using Compubuilt.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<compubuiltContext>(options => options.UseSqlServer(
+
+    builder.Configuration.GetConnectionString("DefaultConnection"),
+    options => options.CommandTimeout(3600))
+);
 
 // Add services to the container.
 //builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
