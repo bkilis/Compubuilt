@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Compubuilt.Models
 {
@@ -11,6 +12,8 @@ namespace Compubuilt.Models
         }
 
         public int PaymentTypeId { get; set; }
+
+        [Display(Name = "Typ płatności")]
         public string Name { get; set; } = null!;
 
         public virtual ICollection<Payment> Payments { get; set; }

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Compubuilt.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlacementDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDraft)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Delivery)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatusType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Payment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PromotionalCode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlacementDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompletionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDraft)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Delivery.DeliveryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderStatusType.OrderStatusTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Payment.PaymentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PromotionalCode.PromotionalCodeTypeId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
