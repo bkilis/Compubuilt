@@ -15,7 +15,9 @@ namespace Compubuilt.Models
         public int CustomerId { get; set; }
         public int? PromotionalCodeId { get; set; }
         public int? DeliveryId { get; set; }
+        public int AddressId { get; set; }
 
+        public virtual CustomerAddress Address { get; set; } = null!;
         public virtual Customer Customer { get; set; } = null!;
         public virtual Delivery? Delivery { get; set; }
         public virtual OrderStatusType? OrderStatusType { get; set; }

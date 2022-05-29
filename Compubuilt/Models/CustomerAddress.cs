@@ -5,6 +5,11 @@ namespace Compubuilt.Models
 {
     public partial class CustomerAddress
     {
+        public CustomerAddress()
+        {
+            Orders = new HashSet<Order>();
+        }
+
         public int CustomerAddressId { get; set; }
         public int CustomerId { get; set; }
         public int AddressTypeId { get; set; }
@@ -15,5 +20,6 @@ namespace Compubuilt.Models
 
         public virtual AddressType AddressType { get; set; } = null!;
         public virtual Customer Customer { get; set; } = null!;
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

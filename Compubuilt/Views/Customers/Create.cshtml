@@ -1,4 +1,6 @@
-﻿@model Compubuilt.Models.Customer
+﻿@using Microsoft.VisualBasic
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Compubuilt.Models.Customer
 
 @{
     ViewData["Title"] = "Create";
@@ -36,6 +38,13 @@
                 <label asp-for="AzureAdsid" class="control-label"></label>
                 <input asp-for="AzureAdsid" class="form-control" />
                 <span asp-validation-for="AzureAdsid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="IsActive" class="form-control" />
+                <input type="hidden" asp-for="CreatedDate" class="form-control" />
+                <input type="hidden" asp-for="CreatedBy" value="@(User.Identity?.Name ?? "Anonymous")" class="form-control" />
+                <input type="hidden" asp-for="LastModifiedDate" value="@DateAndTime.Now" class="form-control" />
+                <input type="hidden" asp-for="LastModifiedBy" value="@(User.Identity?.Name ?? "Anonymous")" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

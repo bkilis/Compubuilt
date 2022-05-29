@@ -1,4 +1,5 @@
-﻿@model Compubuilt.Models.Customer
+﻿@using Microsoft.VisualBasic
+@model Compubuilt.Models.Customer
 
 @{
     ViewData["Title"] = "Edit";
@@ -34,34 +35,16 @@
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsActive" class="control-label"></label>
-                <input asp-for="IsActive" class="form-control" />
-                <span asp-validation-for="IsActive" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastModifiedDate" class="control-label"></label>
-                <input asp-for="LastModifiedDate" class="form-control" />
-                <span asp-validation-for="LastModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastModifiedBy" class="control-label"></label>
-                <input asp-for="LastModifiedBy" class="form-control" />
-                <span asp-validation-for="LastModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="AzureAdsid" class="control-label"></label>
                 <input asp-for="AzureAdsid" class="form-control" />
                 <span asp-validation-for="AzureAdsid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="IsActive" class="form-control" />
+                <input type="hidden" asp-for="CreatedDate" class="form-control" />
+                <input type="hidden" asp-for="CreatedBy" class="form-control" />
+                <input type="hidden" asp-for="LastModifiedDate" value="@DateAndTime.Now" class="form-control" />
+                <input type="hidden" asp-for="LastModifiedBy" value="@(User.Identity?.Name ?? "Anonymous")" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

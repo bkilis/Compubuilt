@@ -13,7 +13,7 @@ namespace Compubuilt.Models
 
         public int PaymentTypeId { get; set; }
 
-        [Display(Name = "Typ płatności")]
+        [Display(Name = "Payment Type Name")]
         public string Name { get; set; } = null!;
 
         public virtual ICollection<Payment> Payments { get; set; }

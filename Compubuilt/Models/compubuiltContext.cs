@@ -32,6 +32,7 @@ namespace Compubuilt.Models
         public virtual DbSet<PaymentType> PaymentTypes { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductCategory> ProductCategories { get; set; } = null!;
+        public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
         public virtual DbSet<ProductParameter> ProductParameters { get; set; } = null!;
         public virtual DbSet<ProductReview> ProductReviews { get; set; } = null!;
         public virtual DbSet<PromotionalCode> PromotionalCodes { get; set; } = null!;
@@ -180,6 +181,12 @@ namespace Compubuilt.Models
 
                 entity.Property(e => e.OrderNumber).HasMaxLength(50);
 
+                entity.HasOne(d => d.Address)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.AddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Orders_CustomerAddresses");
+
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
@@ -276,6 +283,23 @@ namespace Compubuilt.Models
                 entity.ToTable("ProductCategories", "Product");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ProductImage>(entity =>
+            {
+                entity.ToTable("ProductImages", "Product");
+
+                entity.Property(e => e.ImageName).HasMaxLength(150);
+
+                entity.Property(e => e.Url)
+                    .HasMaxLength(2083)
+                    .HasColumnName("URL");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductImages)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductImages_Products");
             });
 
             modelBuilder.Entity<ProductParameter>(entity =>
