@@ -31,6 +31,14 @@ builder.Services.AddRazorPages()
     //.AddMicrosoftIdentityUI()
     ;
 
+//SESSION CONFIGURATION
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".Compubuilt.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +51,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+//SESSIONS
+app.UseSession();
 
 app.UseRouting();
 
