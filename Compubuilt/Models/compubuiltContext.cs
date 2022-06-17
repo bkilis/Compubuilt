@@ -33,6 +33,7 @@ namespace Compubuilt.Models
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductCategory> ProductCategories { get; set; } = null!;
         public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public virtual DbSet<ProductImageType> ProductImageTypes { get; set; } = null!;
         public virtual DbSet<ProductParameter> ProductParameters { get; set; } = null!;
         public virtual DbSet<ProductReview> ProductReviews { get; set; } = null!;
         public virtual DbSet<PromotionalCode> PromotionalCodes { get; set; } = null!;
@@ -43,7 +44,7 @@ namespace Compubuilt.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //optionsBuilder.UseSqlServer("Server=BARTEK-WINDOWS\\SQLEXPRESS;Database=compubuilt;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=BARTEK-WINDOWS\\SQLEXPRESS;Database=compubuilt;Trusted_Connection=True;");
             }
         }
 
@@ -300,6 +301,19 @@ namespace Compubuilt.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductImages_Products");
+
+                entity.HasOne(d => d.ProductImageType)
+                    .WithMany(p => p.ProductImages)
+                    .HasForeignKey(d => d.ProductImageTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductImages_ProductImages");
+            });
+
+            modelBuilder.Entity<ProductImageType>(entity =>
+            {
+                entity.ToTable("ProductImageType", "Product");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<ProductParameter>(entity =>
