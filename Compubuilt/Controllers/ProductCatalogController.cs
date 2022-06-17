@@ -3,6 +3,7 @@ using Compubuilt.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProductImageType = Compubuilt.Enums.ProductImageType;
 
 namespace Compubuilt.Controllers
 {
@@ -28,7 +29,9 @@ namespace Compubuilt.Controllers
             //.Include(p => p.MainProductPhoto)
             //.Where(p => p.IsActive == true)
 
-            var productList = _context.Products.ToList();
+            var productList = _context.Products
+                .Include(p => p.ProductImages)
+                .ToList();
 
             var productCatalog = new ProductCatalogViewModel { ProductList = new List<ProductOverview>()};
 
@@ -38,7 +41,11 @@ namespace Compubuilt.Controllers
                     {
                         ProductId = product.ProductId,
                         ProductName = product.Name,
-                        Price = product.Price
+                        Price = product.Price,
+                        RatingValue = product.AverageRatingValue,
+                        ProductPhotoUrl = product.ProductImages
+                            .Where(pi => pi.ProductImageTypeId == (int)ProductImageType.ProductCatalogThumbnail)
+                            .Select(pi => pi.Url).FirstOrDefault()
                     });
                 }
 
