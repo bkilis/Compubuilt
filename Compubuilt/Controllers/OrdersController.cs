@@ -21,7 +21,12 @@ namespace Compubuilt.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var compubuiltContext = _context.Orders.Include(o => o.Customer).Include(o => o.Delivery).Include(o => o.OrderStatusType).Include(o => o.Payment).Include(o => o.PromotionalCode);
+            var compubuiltContext = _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Delivery)
+                .Include(o => o.OrderStatusType)
+                .Include(o => o.Payment)
+                .Include(o => o.PromotionalCode);
             return View(await compubuiltContext.ToListAsync());
         }
 

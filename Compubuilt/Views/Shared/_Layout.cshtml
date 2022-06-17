@@ -91,10 +91,10 @@
             <div class="col-xl-6 col-lg-7">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="#">Home</a></li>
+                        <li @*class="active"*@><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a href="#">Women’s</a></li>
                         <li><a href="#">Men’s</a></li>
-                        <li><a href="#">Shop</a></li>
+                        <li><a asp-area="" asp-controller="ProductCatalog" asp-action="Index">Shop</a></li>
                         <li>
                             <a href="#">Pages</a>
                             <ul class="dropdown">
