@@ -19,18 +19,9 @@ namespace Compubuilt.Controllers
         // GET: ProductCatalogController
         public ActionResult Index()
         {
-            //var productList = _context.Products
-            //    .Include(p => p.ProductId)
-            //    .Include(p => p.Name)
-            //    .Include(p => p.Price)
-            //    .ToList();
-            //.Include(p => p.ProductImages.Where(pi => pi.ProductImageType))
-            //.Include(p => p.AverageRatingValue)
-            //.Include(p => p.MainProductPhoto)
-            //.Where(p => p.IsActive == true)
-
             var productList = _context.Products
                 .Include(p => p.ProductImages)
+                //.Where(p => p.IsActive == true)
                 .ToList();
 
             var productCatalog = new ProductCatalogViewModel { ProductList = new List<ProductOverview>()};

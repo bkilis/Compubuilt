@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
+using Compubuilt.ViewModels;
+using ProductImageType = Compubuilt.Enums.ProductImageType;
 
 namespace Compubuilt.Controllers
 {
@@ -162,6 +164,42 @@ namespace Compubuilt.Controllers
         private bool ProductExists(int id)
         {
           return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> ProductPage(int? id)
+        {
+            if (id == null || _context.Products == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products
+                .Include(p => p.ProductCategory)
+                .Include(p => p.ProductImages)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var productPage = new ProductPageViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                RatingValue = product.AverageRatingValue,
+                ProductCategoryName = product.ProductCategory.Name,
+                ProductPhotoThumbnailUrls = product.ProductImages
+                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageType.ProductGalleryPhoto)
+                    .Select(pi => pi.Url).ToList(),
+                ProductPhotoUrls = product.ProductImages
+                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageType.ProductGalleryPhoto)
+                    .Select(pi => pi.Url).ToList()
+            };
+
+            return View(productPage);
         }
     }
 }
