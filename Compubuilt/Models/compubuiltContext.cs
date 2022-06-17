@@ -266,6 +266,8 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("Products", "Product");
 
+                entity.Property(e => e.AverageRatingValue).HasColumnType("decimal(2, 1)");
+
                 entity.Property(e => e.Description).HasMaxLength(4000);
 
                 entity.Property(e => e.Name).HasMaxLength(200);
@@ -338,6 +340,8 @@ namespace Compubuilt.Models
             modelBuilder.Entity<ProductReview>(entity =>
             {
                 entity.ToTable("ProductReviews", "Product");
+
+                entity.Property(e => e.RatingValue).HasColumnType("decimal(2, 1)");
 
                 entity.Property(e => e.ReviewText).HasMaxLength(2000);
 
