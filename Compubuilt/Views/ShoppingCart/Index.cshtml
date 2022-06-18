@@ -98,7 +98,14 @@
                             <li>Subtotal <span>$ @Model.DiscountedTotalValue</span></li>
                             <li>Total <span>$ @Model.TotalValue</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
+                        @if (Model.Items.Count > 0)
+                        {
+                            <a asp-controller="Orders" asp-action="Checkout" class="primary-btn">Proceed to checkout</a>
+                        }
+                        else
+                        {
+                            <a class="primary-btn" style="background: #ababab">Proceed to checkout</a>
+                        }
                     </div>
                 </div>
             </div>

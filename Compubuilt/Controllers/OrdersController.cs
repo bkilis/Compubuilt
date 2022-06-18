@@ -30,6 +30,11 @@ namespace Compubuilt.Controllers
             return View(await compubuiltContext.ToListAsync());
         }
 
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {

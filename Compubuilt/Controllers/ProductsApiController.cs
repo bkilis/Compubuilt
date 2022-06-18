@@ -36,7 +36,7 @@ namespace Compubuilt.Controllers
         /// Returns products and their stock availability
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/GetProductsStock")]
+        [HttpGet("GetProductsStock/")]
         public async Task<ActionResult<GetProductsStockResponse>> GetProductsStock()
         {
             if (_context.Products == null)
@@ -68,6 +68,24 @@ namespace Compubuilt.Controllers
           {
               return NotFound();
           }
+          var product = await _context.Products.FindAsync(id);
+
+          if (product == null)
+          {
+              return NotFound();
+          }
+
+          return product;
+        }
+
+        // GET: api/ProductsApi/5
+        [HttpGet("GetProductNameAndQuantity/{id}")]
+        public async Task<ActionResult<GetProductNameAndQuantityResponse>> GetProductNameAndQuantity(int id)
+        {
+            if (_context.Products == null)
+            {
+                return NotFound();
+            }
             var product = await _context.Products.FindAsync(id);
 
             if (product == null)
@@ -75,7 +93,13 @@ namespace Compubuilt.Controllers
                 return NotFound();
             }
 
-            return product;
+            var response = new GetProductNameAndQuantityResponse
+            {
+                Name = product.Name,
+                Quantity = product.Quantity
+            };
+
+            return response;
         }
 
         // PUT: api/ProductsApi/5
