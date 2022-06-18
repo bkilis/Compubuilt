@@ -46,19 +46,24 @@
                         <div class="product__details__price">$ @Html.DisplayFor(modelItem => modelItem.Price) @*<span>$ @Html.DisplayFor(modelItem => modelItem.Price)</span>*@</div>
                         @*<p>Nemo enim ipsam voluptatem quia aspernatur aut odit aut loret fugit, sed quia consequuntur
                         magni lores eos qui ratione voluptatem sequi nesciunt.</p>*@
+
                         <div class="product__details__button">
-                            <div class="quantity">
-                                <span>Quantity:</span>
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
+                            <form asp-controller="ShoppingCart" asp-action="AddItemToCart" method="Get">
+                                <input type="hidden" asp-for="@Model.ProductId" name="id" />
+                                <div class="quantity">
+                                    <span>Quantity:</span>
+                                    <div class="pro-qty">
+                                        <input type="text" name="quantity" value="1">
+                                    </div>
                                 </div>
-                            </div>
-                            <a href="#" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
-                            <ul>
-                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                                <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>
-                            </ul>
+                                <button type="submit" class="cart-btn"> <span class="icon_bag_alt"></span> Add to cart </button>
+                                <ul>
+@*                                    <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                    <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>*@
+                                </ul>
+                            </form>
                         </div>
+
                         <div class="product__details__widget">
                             <ul>
                                 <li>

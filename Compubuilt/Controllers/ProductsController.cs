@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
 using Compubuilt.ViewModels;
-using ProductImageType = Compubuilt.Enums.ProductImageType;
+using ProductImageTypeEnum = Compubuilt.Enums.ProductImageTypeEnum;
 
 namespace Compubuilt.Controllers
 {
@@ -192,10 +192,10 @@ namespace Compubuilt.Controllers
                 RatingValue = product.AverageRatingValue,
                 ProductCategoryName = product.ProductCategory.Name,
                 ProductPhotoThumbnailUrls = product.ProductImages
-                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageType.ProductGalleryPhoto)
+                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageTypeEnum.ProductGalleryPhoto)
                     .Select(pi => pi.Url).ToList(),
                 ProductPhotoUrls = product.ProductImages
-                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageType.ProductGalleryPhoto)
+                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageTypeEnum.ProductGalleryPhoto)
                     .Select(pi => pi.Url).ToList()
             };
 

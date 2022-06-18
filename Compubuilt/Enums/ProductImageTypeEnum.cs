@@ -1,6 +1,6 @@
 ﻿namespace Compubuilt.Enums
 {
-    public enum ProductImageType
+    public enum ProductImageTypeEnum
     {
         ProductCatalogThumbnail = 1,
         BasketThumbnail = 2,
