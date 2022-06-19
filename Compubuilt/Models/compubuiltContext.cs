@@ -36,7 +36,6 @@ namespace Compubuilt.Models
         public virtual DbSet<ProductParameter> ProductParameters { get; set; } = null!;
         public virtual DbSet<ProductReview> ProductReviews { get; set; } = null!;
         public virtual DbSet<PromotionalCode> PromotionalCodes { get; set; } = null!;
-        public virtual DbSet<PromotionalCodeType> PromotionalCodeTypes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -198,7 +197,7 @@ namespace Compubuilt.Models
                 entity.HasOne(d => d.PromotionalCode)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.PromotionalCodeId)
-                    .HasConstraintName("FK_Orders_PromotionalCodeTypes");
+                    .HasConstraintName("FK_Orders_PromotionalCodes");
             });
 
             modelBuilder.Entity<OrderStatusType>(entity =>
@@ -346,24 +345,9 @@ namespace Compubuilt.Models
 
             modelBuilder.Entity<PromotionalCode>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("PromotionalCodes", "Order");
 
                 entity.Property(e => e.Code).HasMaxLength(50);
-
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.HasOne(d => d.PromotionalCodeType)
-                    .WithMany()
-                    .HasForeignKey(d => d.PromotionalCodeTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PromotionalCodes_PromotionalCodeTypes");
-            });
-
-            modelBuilder.Entity<PromotionalCodeType>(entity =>
-            {
-                entity.ToTable("PromotionalCodeTypes", "Order");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
