@@ -159,6 +159,8 @@ namespace Compubuilt.Models
                 entity.ToTable("DeliveryTypes", "Order");
 
                 entity.Property(e => e.DeliveryTypeName).HasMaxLength(50);
+
+                entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             });
 
             modelBuilder.Entity<Order>(entity =>

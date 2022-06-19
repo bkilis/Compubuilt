@@ -12,6 +12,7 @@ namespace Compubuilt.Models
 
         public int DeliveryTypeId { get; set; }
         public string DeliveryTypeName { get; set; } = null!;
+        public decimal? Price { get; set; }
 
         public virtual ICollection<Delivery> Deliveries { get; set; }
     }
