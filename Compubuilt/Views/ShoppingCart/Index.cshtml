@@ -72,8 +72,8 @@
                 <div class="col-lg-6">
                     <div class="discount__content">
                         <h6>Discount codes</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Enter your coupon code">
+                        <form asp-controller="ShoppingCart" asp-action="ApplyPromotionalCode" method="get">
+                            <input type="text" placeholder="Enter your discount code" name="code" asp-for="@Model.AppliedPromotionalCode">
                             <button type="submit" class="site-btn">Apply</button>
                         </form>
                     </div>
@@ -82,8 +82,17 @@
                     <div class="cart__total__procced">
                         <h6>Cart total</h6>
                         <ul>
-                            <li>Subtotal <span>$ @Model.DiscountedTotalValue</span></li>
-                            <li>Total <span>$ @Model.TotalValue</span></li>
+                            @if (Model.AppliedPromotionalCode != null)
+                            {
+                                <li>Total <span style="text-decoration: line-through; color: #8a8a8a;">$ @Model.TotalValue</span></li>
+                                <li>Total with discount <span>$ @Model.DiscountedTotalValue</span></li>
+                                <li>Discount Code <span>@Model.AppliedPromotionalCode</span></li>
+                            }
+                            else
+                            {
+                                <li>Total <span>$ @Model.TotalValue</span></li>
+                            }
+
                         </ul>
                         @if (Model.Items.Count > 0)
                         {

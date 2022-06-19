@@ -65,7 +65,6 @@ namespace Compubuilt.Controllers
             ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "DeliveryId", "DeliveryId");
             ViewData["OrderStatusTypeId"] = new SelectList(_context.OrderStatusTypes, "OrderStatusTypeId", "OrderStatusTypeId");
             ViewData["PaymentId"] = new SelectList(_context.Payments, "PaymentId", "PaymentId");
-            ViewData["PromotionalCodeId"] = new SelectList(_context.PromotionalCodeTypes, "PromotionalCodeTypeId", "PromotionalCodeTypeId");
             return View();
         }
 
@@ -86,7 +85,6 @@ namespace Compubuilt.Controllers
             ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "DeliveryId", "DeliveryId", order.DeliveryId);
             ViewData["OrderStatusTypeId"] = new SelectList(_context.OrderStatusTypes, "OrderStatusTypeId", "OrderStatusTypeId", order.OrderStatusTypeId);
             ViewData["PaymentId"] = new SelectList(_context.Payments, "PaymentId", "PaymentId", order.PaymentId);
-            ViewData["PromotionalCodeId"] = new SelectList(_context.PromotionalCodeTypes, "PromotionalCodeTypeId", "PromotionalCodeTypeId", order.PromotionalCodeId);
             return View(order);
         }
 
@@ -107,7 +105,6 @@ namespace Compubuilt.Controllers
             ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "DeliveryId", "DeliveryId", order.DeliveryId);
             ViewData["OrderStatusTypeId"] = new SelectList(_context.OrderStatusTypes, "OrderStatusTypeId", "OrderStatusTypeId", order.OrderStatusTypeId);
             ViewData["PaymentId"] = new SelectList(_context.Payments, "PaymentId", "PaymentId", order.PaymentId);
-            ViewData["PromotionalCodeId"] = new SelectList(_context.PromotionalCodeTypes, "PromotionalCodeTypeId", "PromotionalCodeTypeId", order.PromotionalCodeId);
             return View(order);
         }
 
@@ -147,7 +144,6 @@ namespace Compubuilt.Controllers
             ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "DeliveryId", "DeliveryId", order.DeliveryId);
             ViewData["OrderStatusTypeId"] = new SelectList(_context.OrderStatusTypes, "OrderStatusTypeId", "OrderStatusTypeId", order.OrderStatusTypeId);
             ViewData["PaymentId"] = new SelectList(_context.Payments, "PaymentId", "PaymentId", order.PaymentId);
-            ViewData["PromotionalCodeId"] = new SelectList(_context.PromotionalCodeTypes, "PromotionalCodeTypeId", "PromotionalCodeTypeId", order.PromotionalCodeId);
             return View(order);
         }
 

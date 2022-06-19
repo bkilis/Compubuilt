@@ -17,17 +17,17 @@ namespace Compubuilt.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var shoppingCart = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
+            var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
 
             var products = _context.Products
-                .Where(t => shoppingCart.Items.Select(i => i.ProductId).Contains(t.ProductId))
+                .Where(t => shoppingCartSession.Items.Select(i => i.ProductId).Contains(t.ProductId))
                 .ToList();
 
             var orderSummary = new OrderSummaryViewModel();
 
             foreach (var product in products)
             {
-                var quantity = shoppingCart.Items
+                var quantity = shoppingCartSession.Items
                     .Where(i => i.ProductId == product.ProductId)
                     .Select(i => i.Quantity).First();
 
@@ -40,6 +40,17 @@ namespace Compubuilt.ViewComponents
                 });
 
                 orderSummary.TotalValue += (product.Price * quantity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
+            {
+                var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
+                    pc.Code == shoppingCartSession.AppliedPromotionalCode.ToLower() && pc.ValidFrom < DateTime.Now &&
+                    pc.ValidTo > DateTime.Now);
+
+                orderSummary.AppliedPromotionalCode = promotionalCode.Code;
+                orderSummary.DiscountedTotalValue = orderSummary.TotalValue -
+                                                    orderSummary.TotalValue * ((decimal)promotionalCode.DiscountValue / 100);
             }
 
             return View("OrderSummary", orderSummary);

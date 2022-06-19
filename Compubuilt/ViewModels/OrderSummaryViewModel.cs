@@ -10,8 +10,8 @@ namespace Compubuilt.ViewModels
         }
         public List<OrderSummaryItem> Items { get; set; }
         public decimal TotalValue { get; set; }
-        public decimal? TotalDiscountedValue { get; set; }
-        public string? AppliedDiscountCode { get; set; }
+        public decimal? DiscountedTotalValue { get; set; }
+        public string? AppliedPromotionalCode { get; set; }
     }
 
     public class OrderSummaryItem

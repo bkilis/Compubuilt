@@ -19,22 +19,21 @@ namespace Compubuilt.Controllers
         // GET: ShoppingCartController
         public IActionResult Index()
         {
-            var shoppingCart = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
+            var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
 
-            if (shoppingCart == null || shoppingCart.Items.Count == 0)
+            if (shoppingCartSession == null || shoppingCartSession.Items.Count == 0)
                 return View(new ShoppingCartViewModel());
 
             var products = _context.Products
                 .Include(p => p.ProductImages)
-                .Where(t => shoppingCart.Items.Select(i => i.ProductId).Contains(t.ProductId))
+                .Where(t => shoppingCartSession.Items.Select(i => i.ProductId).Contains(t.ProductId))
                 .ToList();
 
             var shoppingCartViewModel = new ShoppingCartViewModel();
-            //shoppingCartViewModel.AppliedPromotionalCode = shoppingCart.
 
             foreach (var product in products)
             {
-                var quantity = shoppingCart.Items
+                var quantity = shoppingCartSession.Items
                     .Where(i => i.ProductId == product.ProductId)
                     .Select(i => i.Quantity).First();
 
@@ -51,7 +50,21 @@ namespace Compubuilt.Controllers
                         .Select(pi => pi.Url).FirstOrDefault()
                 });
 
-                shoppingCartViewModel.TotalValue += product.Price;
+                shoppingCartViewModel.TotalValue += (product.Price * quantity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
+            {
+                var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
+                    pc.Code == shoppingCartSession.AppliedPromotionalCode.ToLower() && pc.ValidFrom < DateTime.Now &&
+                    pc.ValidTo > DateTime.Now);
+
+                if(promotionalCode == null)
+                    return View(shoppingCartViewModel);
+
+                shoppingCartViewModel.AppliedPromotionalCode = promotionalCode.Code;
+                shoppingCartViewModel.DiscountedTotalValue = shoppingCartViewModel.TotalValue -
+                                                             shoppingCartViewModel.TotalValue * ((decimal)promotionalCode.DiscountValue / 100);
             }
 
             return View(shoppingCartViewModel);
@@ -103,6 +116,42 @@ namespace Compubuilt.Controllers
 
             return RedirectToAction(nameof(Index));
 
+        }
+
+        public IActionResult ApplyPromotionalCode(string code)
+        {
+            if(code == null)
+                return RedirectToAction(nameof(Index));
+
+            byte[] cartId;
+
+            var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
+                pc.Code == code.ToLower() && pc.ValidFrom < DateTime.Now &&
+                pc.ValidTo > DateTime.Now);
+
+            if (promotionalCode == null)
+                return RedirectToAction(nameof(Index));
+
+            if (!HttpContext.Session.TryGetValue("cartId", out cartId))
+            {
+                HttpContext.Session.SetString("cartId", Guid.NewGuid().ToString());
+                HttpContext.Session.Set("cartContents", new ShoppingCartSessionModel
+                {
+                    AppliedPromotionalCode = promotionalCode.Code,
+                    PromotionalCodeDiscountValue = promotionalCode.DiscountValue
+                });
+            }
+            else //if item alreay is in the cart quantity ++
+            {
+                var shoppingCart = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
+
+                shoppingCart.AppliedPromotionalCode = promotionalCode.Code;
+                shoppingCart.PromotionalCodeDiscountValue = promotionalCode.DiscountValue;
+
+                HttpContext.Session.Set("cartContents", shoppingCart);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ShoppingCartController/Delete/5

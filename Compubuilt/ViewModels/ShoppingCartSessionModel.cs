@@ -12,6 +12,9 @@
 
         public int TotalQuantity { get; set; }
 
+        public string AppliedPromotionalCode { get; set; }
+        public byte PromotionalCodeDiscountValue { get; set; }
+
     }
 
     public class ShoppingCartSessionItem

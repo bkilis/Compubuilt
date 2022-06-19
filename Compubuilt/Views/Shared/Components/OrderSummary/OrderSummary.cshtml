@@ -18,13 +18,13 @@
     <div class="checkout__order__total">
         <ul>
             <li>Total <span style="text-decoration: line-through; color: #787878;">$ @Model.TotalValue</span></li>
-            <li>After discounts <span>$ @Model.TotalDiscountedValue</span></li>
+            <li>After discounts <span>$ @Model.DiscountedTotalValue</span></li>
         </ul>
     </div>
     <div class="checkout__order__widget">
-        @if (!Model.AppliedDiscountCode.IsNullOrEmpty())
+        @if (!Model.AppliedPromotionalCode.IsNullOrEmpty())
         {
-            <p>Applied discount code: @Model.AppliedDiscountCode</p>
+            <p>Applied discount code: @Model.AppliedPromotionalCode</p>
         }
     </div>
     <button type="submit" class="site-btn">Place order</button>
