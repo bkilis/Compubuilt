@@ -26,6 +26,11 @@ namespace Compubuilt.Controllers
                           Problem("Entity set 'compubuiltContext.Customers'  is null.");
         }
 
+        public async Task<IActionResult> CustomerDetailsEdit()
+        {
+            return View();
+        }
+
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {

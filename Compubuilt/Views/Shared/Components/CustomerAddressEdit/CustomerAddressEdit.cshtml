@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Compubuilt.ViewModels.CustomerAddressEditViewModel
+
+<div class="col-lg-8">
+    <form asp-action="SaveAddressChanges" asp-controller="CustomerAddresses" method="post" class="checkout__form">
+        <h5>Billing detail</h5>
+        @*        <div class="col-lg-12">
+            <h6 class="coupon__link">Address information have been successfully updated.</h6>
+        </div>*@
+        @if (Model.CustomerAddressId != null)
+        {
+            <p>Delivery data has been automatically filled based on the address information saved in your profile.</p>
+        }
+        <div class="row">
+            @*        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="checkout__form__input">
+                <p>First Name <span>*</span></p>
+                <input type="text">
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="checkout__form__input">
+                <p>Last Name <span>*</span></p>
+                <input type="text">
+            </div>
+        </div>*@
+            <div class="col-lg-12">
+                <div class="checkout__form__input">
+                    <input type="hidden" asp-for="CustomerAddressId"/>
+                    <input type="hidden" asp-for="Action"/>
+                    <input type="hidden" asp-for="Controller"/>
+                    <p>Address <span>*</span></p>
+                    <input type="text" asp-for="StreetName" placeholder="Street Name">
+                    <input type="text" asp-for="StreetNumber" placeholder="Street Number">
+                </div>
+                <div class="checkout__form__input">
+                    <p>Town/City <span>*</span></p>
+                    <input asp-for="CityName" type="text">
+                </div>
+                <div class="checkout__form__input">
+                    <p>Postcode/Zip <span>*</span></p>
+                    <input asp-for="PostalCode" type="text">
+                </div>
+            </div>
+@*            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="checkout__form__input">
+                    <p>Phone <span>*</span></p>
+                    <input type="text">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="checkout__form__input">
+                    <p>Email <span>*</span></p>
+                    <input type="text">
+                </div>
+            </div>*@
+        </div>
+        <button type="submit" class="cart-btn"> <span class="icon_floppy"></span> Save address changes </button>
+    </form>
+</div>
+

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
+using Compubuilt.ViewModels;
 
 namespace Compubuilt.Controllers
 {
@@ -21,7 +22,7 @@ namespace Compubuilt.Controllers
         // GET: CustomerAddresses
         public async Task<IActionResult> Index()
         {
-            var compubuiltContext = _context.CustomerAddresses.Include(c => c.AddressType).Include(c => c.Customer);
+            var compubuiltContext = _context.CustomerAddresses.Include(c => c.Customer);
             return View(await compubuiltContext.ToListAsync());
         }
 
@@ -34,7 +35,6 @@ namespace Compubuilt.Controllers
             }
 
             var customerAddress = await _context.CustomerAddresses
-                .Include(c => c.AddressType)
                 .Include(c => c.Customer)
                 .FirstOrDefaultAsync(m => m.CustomerAddressId == id);
             if (customerAddress == null)
@@ -48,7 +48,6 @@ namespace Compubuilt.Controllers
         // GET: CustomerAddresses/Create
         public IActionResult Create()
         {
-            ViewData["AddressTypeId"] = new SelectList(_context.AddressTypes, "AddressTypeId", "AddressTypeId");
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId");
             return View();
         }
@@ -58,7 +57,7 @@ namespace Compubuilt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerAddressId,CustomerId,AddressTypeId,StreetName,StreetNumber,CityName,PostalCode")] CustomerAddress customerAddress)
+        public async Task<IActionResult> Create([Bind("CustomerAddressId,CustomerId,StreetName,StreetNumber,CityName,PostalCode")] CustomerAddress customerAddress)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +65,6 @@ namespace Compubuilt.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressTypeId"] = new SelectList(_context.AddressTypes, "AddressTypeId", "AddressTypeId", customerAddress.AddressTypeId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", customerAddress.CustomerId);
             return View(customerAddress);
         }
@@ -84,7 +82,6 @@ namespace Compubuilt.Controllers
             {
                 return NotFound();
             }
-            ViewData["AddressTypeId"] = new SelectList(_context.AddressTypes, "AddressTypeId", "AddressTypeId", customerAddress.AddressTypeId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", customerAddress.CustomerId);
             return View(customerAddress);
         }
@@ -94,7 +91,7 @@ namespace Compubuilt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerAddressId,CustomerId,AddressTypeId,StreetName,StreetNumber,CityName,PostalCode")] CustomerAddress customerAddress)
+        public async Task<IActionResult> Edit(int id, [Bind("CustomerAddressId,CustomerId,StreetName,StreetNumber,CityName,PostalCode")] CustomerAddress customerAddress)
         {
             if (id != customerAddress.CustomerAddressId)
             {
@@ -121,7 +118,6 @@ namespace Compubuilt.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressTypeId"] = new SelectList(_context.AddressTypes, "AddressTypeId", "AddressTypeId", customerAddress.AddressTypeId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", customerAddress.CustomerId);
             return View(customerAddress);
         }
@@ -135,7 +131,6 @@ namespace Compubuilt.Controllers
             }
 
             var customerAddress = await _context.CustomerAddresses
-                .Include(c => c.AddressType)
                 .Include(c => c.Customer)
                 .FirstOrDefaultAsync(m => m.CustomerAddressId == id);
             if (customerAddress == null)
@@ -168,6 +163,33 @@ namespace Compubuilt.Controllers
         private bool CustomerAddressExists(int id)
         {
           return (_context.CustomerAddresses?.Any(e => e.CustomerAddressId == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> SaveAddressChanges(CustomerAddressEditViewModel updatedCustomerAddress)
+        {
+            //if(customerAddress == null)
+            //    return NotFound();
+
+            var customerAddress = await _context.CustomerAddresses
+                .Include(c => c.Customer)
+                .FirstOrDefaultAsync(m => m.CustomerAddressId == updatedCustomerAddress.CustomerAddressId);
+
+            customerAddress.StreetName = updatedCustomerAddress.StreetName;
+            customerAddress.StreetNumber = updatedCustomerAddress.StreetNumber;
+            customerAddress.CityName = updatedCustomerAddress.CityName;
+            customerAddress.PostalCode = updatedCustomerAddress.PostalCode;
+
+            try
+            {
+                _context.Update(customerAddress);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return RedirectToAction(updatedCustomerAddress.Action, updatedCustomerAddress.Controller);
         }
     }
 }

@@ -16,7 +16,6 @@ namespace Compubuilt.Models
         {
         }
 
-        public virtual DbSet<AddressType> AddressTypes { get; set; } = null!;
         public virtual DbSet<Agreement> Agreements { get; set; } = null!;
         public virtual DbSet<AgreementType> AgreementTypes { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
@@ -50,13 +49,6 @@ namespace Compubuilt.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AddressType>(entity =>
-            {
-                entity.ToTable("AddressType", "Customer");
-
-                entity.Property(e => e.AddressTypeName).HasMaxLength(50);
-            });
-
             modelBuilder.Entity<Agreement>(entity =>
             {
                 entity.ToTable("Agreements", "Customer");
@@ -129,12 +121,6 @@ namespace Compubuilt.Models
                 entity.Property(e => e.StreetName).HasMaxLength(150);
 
                 entity.Property(e => e.StreetNumber).HasMaxLength(10);
-
-                entity.HasOne(d => d.AddressType)
-                    .WithMany(p => p.CustomerAddresses)
-                    .HasForeignKey(d => d.AddressTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerAddresses_AddressType");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.CustomerAddresses)
