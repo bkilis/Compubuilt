@@ -27,10 +27,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewComponents\" />
-    <Folder Include="ViewComponents\" />
-    <Folder Include="Views\Shared\Components\FeaturedProducts\" />
-  </ItemGroup>
-
 </Project>

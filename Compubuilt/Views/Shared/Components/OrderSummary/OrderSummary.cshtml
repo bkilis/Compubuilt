@@ -1,0 +1,31 @@
+﻿@using Microsoft.IdentityModel.Tokens
+@model Compubuilt.ViewModels.OrderSummaryViewModel
+
+<div class="checkout__order">
+    <h5>Your order</h5>
+    <div class="checkout__order__product">
+        <ul>
+            <li>
+                <span class="top__text">Product</span>
+                <span class="top__text__right">Total</span>
+            </li>
+            @foreach (var item in Model.Items)
+            {
+                <li>@item.Name x @item.Quantity <span>$ @item.TotalPrice</span></li>
+            }
+        </ul>
+    </div>
+    <div class="checkout__order__total">
+        <ul>
+            <li>Total <span style="text-decoration: line-through; color: #787878;">$ @Model.TotalValue</span></li>
+            <li>After discounts <span>$ @Model.TotalDiscountedValue</span></li>
+        </ul>
+    </div>
+    <div class="checkout__order__widget">
+        @if (!Model.AppliedDiscountCode.IsNullOrEmpty())
+        {
+            <p>Applied discount code: @Model.AppliedDiscountCode</p>
+        }
+    </div>
+    <button type="submit" class="site-btn">Place order</button>
+</div>
