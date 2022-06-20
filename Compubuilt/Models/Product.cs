@@ -7,6 +7,7 @@ namespace Compubuilt.Models
     {
         public Product()
         {
+            OrderProducts = new HashSet<OrderProduct>();
             ProductImages = new HashSet<ProductImage>();
             ProductParameters = new HashSet<ProductParameter>();
             ProductReviews = new HashSet<ProductReview>();
@@ -21,6 +22,7 @@ namespace Compubuilt.Models
         public decimal? AverageRatingValue { get; set; }
 
         public virtual ProductCategory ProductCategory { get; set; } = null!;
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }
         public virtual ICollection<ProductParameter> ProductParameters { get; set; }
         public virtual ICollection<ProductReview> ProductReviews { get; set; }

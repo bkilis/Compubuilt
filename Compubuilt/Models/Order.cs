@@ -5,6 +5,11 @@ namespace Compubuilt.Models
 {
     public partial class Order
     {
+        public Order()
+        {
+            OrderProducts = new HashSet<OrderProduct>();
+        }
+
         public int OrderId { get; set; }
         public string OrderNumber { get; set; } = null!;
         public DateTime PlacementDate { get; set; }
@@ -23,5 +28,6 @@ namespace Compubuilt.Models
         public virtual OrderStatusType? OrderStatusType { get; set; }
         public virtual Payment? Payment { get; set; }
         public virtual PromotionalCode? PromotionalCode { get; set; }
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

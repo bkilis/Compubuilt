@@ -75,6 +75,9 @@ namespace Compubuilt.Controllers
             if (id == null || quantity == null || quantity < 1)
                 return NotFound();
 
+            if(quantity.Value > 250)
+                return NotFound();
+
             byte[] cartId;
 
             if (!HttpContext.Session.TryGetValue("cartId", out cartId))

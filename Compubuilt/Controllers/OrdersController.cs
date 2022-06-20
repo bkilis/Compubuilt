@@ -67,25 +67,48 @@ namespace Compubuilt.Controllers
             order.CustomerId = userId;
             order.AddressId = userAddressId;
 
+            decimal promotionalCodeDiscountValue = 1;
+
             if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
             {
                 var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
                     pc.Code == shoppingCartSession.AppliedPromotionalCode.ToLower() && pc.ValidFrom < DateTime.Now &&
                     pc.ValidTo > DateTime.Now);
+
                 if (promotionalCode != null)
                 {
                     order.PromotionalCodeId = promotionalCode.PromotionalCodeId;
+                    promotionalCodeDiscountValue = (decimal)promotionalCode.DiscountValue / 100;
                 }
             }
 
             _context.Add(order);
             await _context.SaveChangesAsync();
 
+            decimal totalValue = 0;
+
             foreach (var product in products)
             {
-                
+                var quantity = shoppingCartSession.Items
+                    .Where(i => i.ProductId == product.ProductId)
+                    .Select(i => i.Quantity).First();
+
+                var orderProduct = new OrderProduct
+                {
+                    OrderId = order.OrderId,
+                    ProductId = product.ProductId,
+                    Price = product.Price,
+                    DiscountValue = product.Price * promotionalCodeDiscountValue,
+                    Quantity = (byte)quantity
+                };
+
+                _context.Add(orderProduct);
+                await _context.SaveChangesAsync();
+
+                totalValue += quantity * (product.Price * promotionalCodeDiscountValue);
             }
 
+            //order.TotalValue = totalValue;
 
             return View();
         }

@@ -24,6 +24,7 @@ namespace Compubuilt.Models
         public virtual DbSet<DeliveryStatusType> DeliveryStatusTypes { get; set; } = null!;
         public virtual DbSet<DeliveryType> DeliveryTypes { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderProduct> OrderProducts { get; set; } = null!;
         public virtual DbSet<OrderStatusType> OrderStatusTypes { get; set; } = null!;
         public virtual DbSet<ParameterType> ParameterTypes { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
@@ -200,6 +201,29 @@ namespace Compubuilt.Models
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.PromotionalCodeId)
                     .HasConstraintName("FK_Orders_PromotionalCodes");
+            });
+
+            modelBuilder.Entity<OrderProduct>(entity =>
+            {
+                entity.ToTable("OrderProducts", "Order");
+
+                entity.Property(e => e.OrderProductId).ValueGeneratedNever();
+
+                entity.Property(e => e.DiscountValue).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderProducts)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderProducts_Orders");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OrderProducts)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderProducts_Products");
             });
 
             modelBuilder.Entity<OrderStatusType>(entity =>
