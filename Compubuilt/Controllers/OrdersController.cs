@@ -61,13 +61,12 @@ namespace Compubuilt.Controllers
             var selectedPaymentType = _context.PaymentTypes.FirstOrDefault(dt => dt.PaymentTypeId == SelectedPaymentTypeId);
 
             var order = new Order();
-            order.OrderNumber = DateTime.Now.ToString("dd-MM-yy") + "_" + Guid.NewGuid();
             order.PlacementDate = DateTime.Now;
             order.OrderStatusTypeId = (int)OrderStatusTypeEnum.New;
             order.CustomerId = userId;
             order.AddressId = userAddressId;
 
-            decimal promotionalCodeDiscountValue = 1;
+            decimal promotionalCodeDiscountValue = 0;
 
             if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
             {
@@ -105,10 +104,35 @@ namespace Compubuilt.Controllers
                 _context.Add(orderProduct);
                 await _context.SaveChangesAsync();
 
-                totalValue += quantity * (product.Price * promotionalCodeDiscountValue);
+                totalValue += quantity * (product.Price - (promotionalCodeDiscountValue * product.Price) );
             }
 
-            //order.TotalValue = totalValue;
+            var payment = new Payment
+            {
+                PaymentTypeId = selectedPaymentType.PaymentTypeId,
+                PaymentStatusTypeId = (int)PaymentStatusTypeEnum.Pending
+            };
+            _context.Add(payment);
+
+            var delivery = new Delivery
+            {
+                DeliveryTypeId = selectedDeliveryType.DeliveryTypeId,
+                DeliveryStatusTypeId = (int)DeliveryStatusTypeEnum.New
+            };
+            _context.Add(delivery);
+
+            await _context.SaveChangesAsync();
+            
+            order.TotalValue = totalValue + selectedDeliveryType.Price.Value;
+            order.OrderNumber = DateTime.Now.ToString("ddMMyy") + order.OrderId;
+            order.PaymentId = payment.PaymentId;
+            order.DeliveryId = delivery.DeliveryId;
+            await _context.SaveChangesAsync();
+
+
+            //TODO: przekazać tutaj we viewbagu nazwę złożonego zamówienia
+            HttpContext.Session.SetString("cartId", null);
+            HttpContext.Session.Set("cartContents", null);
 
             return View();
         }
