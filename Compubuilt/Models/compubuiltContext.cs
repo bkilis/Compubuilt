@@ -170,6 +170,8 @@ namespace Compubuilt.Models
 
                 entity.Property(e => e.OrderNumber).HasMaxLength(50);
 
+                entity.Property(e => e.TotalValue).HasColumnType("decimal(10, 2)");
+
                 entity.HasOne(d => d.Address)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.AddressId)
