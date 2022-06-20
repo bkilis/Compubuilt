@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using Compubuilt.Enums;
+using Compubuilt.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
+using Compubuilt.ViewModels;
+using Microsoft.Identity.Client;
 
 namespace Compubuilt.Controllers
 {
@@ -32,6 +37,56 @@ namespace Compubuilt.Controllers
 
         public IActionResult Checkout()
         {
+            return View();
+        }
+
+        public async Task<IActionResult> PlaceOrder(int SelectedOrderDeliveryTypeId, int SelectedPaymentTypeId)
+        {
+            //TODO: zaktualizować po podłączeniu do AAD
+            var userId = 1;
+            var userAddressId = 1;
+
+            var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
+            if (shoppingCartSession == null)
+                return NotFound();
+
+            var products = _context.Products
+                .Where(t => shoppingCartSession.Items.Select(i => i.ProductId).Contains(t.ProductId))
+                .ToList();
+
+            if (!products.Any())
+                return NotFound();
+
+            var selectedDeliveryType = _context.DeliveryTypes.FirstOrDefault(dt => dt.DeliveryTypeId == SelectedOrderDeliveryTypeId);
+            var selectedPaymentType = _context.PaymentTypes.FirstOrDefault(dt => dt.PaymentTypeId == SelectedPaymentTypeId);
+
+            var order = new Order();
+            order.OrderNumber = DateTime.Now.ToString("dd-MM-yy") + "_" + Guid.NewGuid();
+            order.PlacementDate = DateTime.Now;
+            order.OrderStatusTypeId = (int)OrderStatusTypeEnum.New;
+            order.CustomerId = userId;
+            order.AddressId = userAddressId;
+
+            if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
+            {
+                var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
+                    pc.Code == shoppingCartSession.AppliedPromotionalCode.ToLower() && pc.ValidFrom < DateTime.Now &&
+                    pc.ValidTo > DateTime.Now);
+                if (promotionalCode != null)
+                {
+                    order.PromotionalCodeId = promotionalCode.PromotionalCodeId;
+                }
+            }
+
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+
+            foreach (var product in products)
+            {
+                
+            }
+
+
             return View();
         }
 

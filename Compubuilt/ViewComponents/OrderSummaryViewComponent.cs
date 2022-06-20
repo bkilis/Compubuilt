@@ -23,7 +23,28 @@ namespace Compubuilt.ViewComponents
                 .Where(t => shoppingCartSession.Items.Select(i => i.ProductId).Contains(t.ProductId))
                 .ToList();
 
+            var deliveryTypes = _context.DeliveryTypes;
+            var paymentTypes = _context.PaymentTypes;
+
             var orderSummary = new OrderSummaryViewModel();
+
+            foreach (var deliveryType in deliveryTypes)
+            {
+                orderSummary.OrderDeliveryTypes.Add(new OrderDeliveryType
+                {
+                    DeliveryTypeId = deliveryType.DeliveryTypeId,
+                    DeliveryTypeName = deliveryType.DeliveryTypeName + " $" + deliveryType.Price
+                });
+            }
+
+            foreach (var paymentType in paymentTypes)
+            {
+                orderSummary.OrderPaymentTypes.Add(new OrderPaymentType
+                {
+                    PaymentTypeId = paymentType.PaymentTypeId,
+                    PaymentTypeName = paymentType.Name
+                });
+            }
 
             foreach (var product in products)
             {

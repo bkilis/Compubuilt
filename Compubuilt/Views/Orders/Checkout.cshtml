@@ -1,22 +1,20 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Checkout";
 }
 
-<partial name="_Breadcrumbs"/>
+<partial name="_Breadcrumbs" />
 
-    <!-- Checkout Section Begin -->
-    <section class="checkout spad">
-        <div class="container">
-            <div class="row">
-
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="row">
+        </div>
+        <div class="row">
+            @await Component.InvokeAsync("CustomerAddressEdit")
+            <div class="col-lg-4">
+                @await Component.InvokeAsync("OrderSummary")
             </div>
-                <div class="row">
-                    @await Component.InvokeAsync("CustomerAddressEdit")
-                    <div class="col-lg-4">
-                            @await Component.InvokeAsync("OrderSummary")
-                        </div>
-                    </div>
-            </div>
-        </section>
-        <!-- Checkout Section End -->
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->

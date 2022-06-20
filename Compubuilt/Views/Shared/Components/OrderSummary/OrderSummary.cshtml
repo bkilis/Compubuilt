@@ -1,4 +1,6 @@
 ﻿@using Microsoft.IdentityModel.Tokens
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Mvc.Rendering
 @model Compubuilt.ViewModels.OrderSummaryViewModel
 
 <div class="checkout__order">
@@ -17,8 +19,16 @@
     </div>
     <div class="checkout__order__total">
         <ul>
-            <li>Total <span style="text-decoration: line-through; color: #787878;">$ @Model.TotalValue</span></li>
-            <li>After discounts <span>$ @Model.DiscountedTotalValue</span></li>
+            @if (Model.AppliedPromotionalCode == null)
+            {
+                <li>Total <span>$ @Model.TotalValue</span></li>
+            }
+            else
+            {
+                <li>Total <span style="text-decoration: line-through; color: #787878;">$ @Model.TotalValue</span></li>
+                <li>After discounts <span>$ @Model.DiscountedTotalValue</span></li>
+            }
+
         </ul>
     </div>
     <div class="checkout__order__widget">
@@ -27,5 +37,16 @@
             <p>Applied discount code: @Model.AppliedPromotionalCode</p>
         }
     </div>
-    <button type="submit" class="site-btn">Place order</button>
+    <div class="checkout__order__widget">
+        <form asp-action="PlaceOrder">
+        <p>Shipment method</p>
+        @Html.DropDownListFor(x => Model.SelectedOrderDeliveryTypeId, new SelectList(Model.OrderDeliveryTypes, "DeliveryTypeId", "DeliveryTypeName"), htmlAttributes: new { @class = "form-control", id = "SelectedOrderDeliveryTypeId" })
+        <br/>
+        <p>Payment method</p>
+        @Html.DropDownListFor(x => Model.SelectedPaymentTypeId, new SelectList(Model.OrderPaymentTypes, "PaymentTypeId", "PaymentTypeName"), htmlAttributes: new { @class = "form-control", id = "SelectedPaymentTypeId" })
+        <br/>
+        <input type="submit" value="Place order" class="site-btn" />
+        </form>
+    </div>
+@*    <a class="site-btn" asp-controller="Orders" asp-action="PlaceOrder" asp-for="@Model">Place order</a>*@
 </div>
