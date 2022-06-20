@@ -209,8 +209,6 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("OrderProducts", "Order");
 
-                entity.Property(e => e.OrderProductId).ValueGeneratedNever();
-
                 entity.Property(e => e.DiscountValue).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");

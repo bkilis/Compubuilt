@@ -11,7 +11,7 @@ namespace Compubuilt.Models
         }
 
         public int OrderId { get; set; }
-        public string OrderNumber { get; set; } = null!;
+        public string? OrderNumber { get; set; }
         public DateTime PlacementDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public int? OrderStatusTypeId { get; set; }

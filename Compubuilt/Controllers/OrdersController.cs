@@ -42,99 +42,112 @@ namespace Compubuilt.Controllers
 
         public async Task<IActionResult> PlaceOrder(int SelectedOrderDeliveryTypeId, int SelectedPaymentTypeId)
         {
-            //TODO: zaktualizować po podłączeniu do AAD
-            var userId = 1;
-            var userAddressId = 1;
-
-            var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
-            if (shoppingCartSession == null)
-                return NotFound();
-
-            var products = _context.Products
-                .Where(t => shoppingCartSession.Items.Select(i => i.ProductId).Contains(t.ProductId))
-                .ToList();
-
-            if (!products.Any())
-                return NotFound();
-
-            var selectedDeliveryType = _context.DeliveryTypes.FirstOrDefault(dt => dt.DeliveryTypeId == SelectedOrderDeliveryTypeId);
-            var selectedPaymentType = _context.PaymentTypes.FirstOrDefault(dt => dt.PaymentTypeId == SelectedPaymentTypeId);
-
-            var order = new Order();
-            order.PlacementDate = DateTime.Now;
-            order.OrderStatusTypeId = (int)OrderStatusTypeEnum.New;
-            order.CustomerId = userId;
-            order.AddressId = userAddressId;
-
-            decimal promotionalCodeDiscountValue = 0;
-
-            if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
+            try
             {
-                var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
-                    pc.Code == shoppingCartSession.AppliedPromotionalCode.ToLower() && pc.ValidFrom < DateTime.Now &&
-                    pc.ValidTo > DateTime.Now);
+                //TODO: zaktualizować po podłączeniu do AAD
+                var userId = 1;
+                var userAddressId = 1;
 
-                if (promotionalCode != null)
+                var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
+                if (shoppingCartSession == null)
+                    return NotFound();
+
+                var products = _context.Products
+                    .Where(t => shoppingCartSession.Items.Select(i => i.ProductId).Contains(t.ProductId))
+                    .ToList();
+
+                if (!products.Any())
+                    return NotFound();
+
+                var selectedDeliveryType =
+                    _context.DeliveryTypes.FirstOrDefault(dt => dt.DeliveryTypeId == SelectedOrderDeliveryTypeId);
+                var selectedPaymentType =
+                    _context.PaymentTypes.FirstOrDefault(dt => dt.PaymentTypeId == SelectedPaymentTypeId);
+
+                var order = new Order();
+                order.PlacementDate = DateTime.Now;
+                order.OrderStatusTypeId = (int)OrderStatusTypeEnum.New;
+                order.CustomerId = userId;
+                order.AddressId = userAddressId;
+
+                decimal promotionalCodeDiscountValue = 0;
+
+                if (!string.IsNullOrWhiteSpace(shoppingCartSession.AppliedPromotionalCode))
                 {
-                    order.PromotionalCodeId = promotionalCode.PromotionalCodeId;
-                    promotionalCodeDiscountValue = (decimal)promotionalCode.DiscountValue / 100;
+                    var promotionalCode = _context.PromotionalCodes.FirstOrDefault(pc =>
+                        pc.Code == shoppingCartSession.AppliedPromotionalCode.ToLower() &&
+                        pc.ValidFrom < DateTime.Now &&
+                        pc.ValidTo > DateTime.Now);
+
+                    if (promotionalCode != null)
+                    {
+                        order.PromotionalCodeId = promotionalCode.PromotionalCodeId;
+                        promotionalCodeDiscountValue = (decimal)promotionalCode.DiscountValue / 100;
+                    }
                 }
-            }
 
-            _context.Add(order);
-            await _context.SaveChangesAsync();
-
-            decimal totalValue = 0;
-
-            foreach (var product in products)
-            {
-                var quantity = shoppingCartSession.Items
-                    .Where(i => i.ProductId == product.ProductId)
-                    .Select(i => i.Quantity).First();
-
-                var orderProduct = new OrderProduct
-                {
-                    OrderId = order.OrderId,
-                    ProductId = product.ProductId,
-                    Price = product.Price,
-                    DiscountValue = product.Price * promotionalCodeDiscountValue,
-                    Quantity = (byte)quantity
-                };
-
-                _context.Add(orderProduct);
+                _context.Add(order);
                 await _context.SaveChangesAsync();
 
-                totalValue += quantity * (product.Price - (promotionalCodeDiscountValue * product.Price) );
+                decimal totalValue = 0;
+
+                foreach (var product in products)
+                {
+                    var quantity = shoppingCartSession.Items
+                        .Where(i => i.ProductId == product.ProductId)
+                        .Select(i => i.Quantity).First();
+
+                    var orderProduct = new OrderProduct
+                    {
+                        OrderId = order.OrderId,
+                        ProductId = product.ProductId,
+                        Price = product.Price,
+                        DiscountValue = product.Price * promotionalCodeDiscountValue,
+                        Quantity = (byte)quantity
+                    };
+
+                    _context.Add(orderProduct);
+                    await _context.SaveChangesAsync();
+
+                    totalValue += quantity * (product.Price - (promotionalCodeDiscountValue * product.Price));
+                }
+
+                var payment = new Payment
+                {
+                    PaymentTypeId = selectedPaymentType.PaymentTypeId,
+                    PaymentStatusTypeId = (int)PaymentStatusTypeEnum.Pending
+                };
+                _context.Add(payment);
+
+                var delivery = new Delivery
+                {
+                    DeliveryTypeId = selectedDeliveryType.DeliveryTypeId,
+                    DeliveryStatusTypeId = (int)DeliveryStatusTypeEnum.New
+                };
+                _context.Add(delivery);
+
+                await _context.SaveChangesAsync();
+
+                order.TotalValue = totalValue + selectedDeliveryType.Price.Value;
+                order.OrderNumber = DateTime.Now.ToString("ddMMyy") + order.OrderId;
+                order.PaymentId = payment.PaymentId;
+                order.DeliveryId = delivery.DeliveryId;
+                await _context.SaveChangesAsync();
+
+
+                //TODO: przekazać tutaj we viewbagu nazwę złożonego zamówienia
+
+                return View();
             }
-
-            var payment = new Payment
+            catch (Exception e)
             {
-                PaymentTypeId = selectedPaymentType.PaymentTypeId,
-                PaymentStatusTypeId = (int)PaymentStatusTypeEnum.Pending
-            };
-            _context.Add(payment);
-
-            var delivery = new Delivery
+                return BadRequest();
+            }
+            finally
             {
-                DeliveryTypeId = selectedDeliveryType.DeliveryTypeId,
-                DeliveryStatusTypeId = (int)DeliveryStatusTypeEnum.New
-            };
-            _context.Add(delivery);
-
-            await _context.SaveChangesAsync();
-            
-            order.TotalValue = totalValue + selectedDeliveryType.Price.Value;
-            order.OrderNumber = DateTime.Now.ToString("ddMMyy") + order.OrderId;
-            order.PaymentId = payment.PaymentId;
-            order.DeliveryId = delivery.DeliveryId;
-            await _context.SaveChangesAsync();
-
-
-            //TODO: przekazać tutaj we viewbagu nazwę złożonego zamówienia
-            HttpContext.Session.SetString("cartId", null);
-            HttpContext.Session.Set("cartContents", null);
-
-            return View();
+                HttpContext.Session.Remove("cartId");
+                HttpContext.Session.Remove("cartContents");
+            }
         }
 
         // GET: Orders/Details/5
