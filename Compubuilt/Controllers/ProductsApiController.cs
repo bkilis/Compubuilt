@@ -23,13 +23,29 @@ namespace Compubuilt.Controllers
 
         // GET: api/ProductsApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductApiModel>>> GetProducts()
         {
           if (_context.Products == null)
           {
               return NotFound();
           }
-          return await _context.Products.ToListAsync();
+
+          var response = new List<ProductApiModel>();
+          foreach (var product in _context.Products)
+          {
+              response.Add(new ProductApiModel
+              {
+                  ProductId = product.ProductId,
+                  Name = product.Name,
+                  Description = product.Description,
+                  Quantity = product.Quantity,
+                  Price = product.Price,
+                  ProductCategoryId = product.ProductCategoryId,
+                  AverageRatingValue = product.AverageRatingValue
+              });
+          }
+
+          return response;
         }
 
         /// <summary>
@@ -62,20 +78,31 @@ namespace Compubuilt.Controllers
 
         // GET: api/ProductsApi/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductApiModel>> GetProduct(int id)
         {
-          if (_context.Products == null)
-          {
-              return NotFound();
-          }
-          var product = await _context.Products.FindAsync(id);
+            if (_context.Products == null)
+            {
+                return NotFound();
+            }
+            var product = await _context.Products.FindAsync(id);
 
-          if (product == null)
-          {
-              return NotFound();
-          }
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-          return product;
+            var response = new ProductApiModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                Quantity = product.Quantity,
+                Price = product.Price,
+                ProductCategoryId = product.ProductCategoryId,
+                AverageRatingValue = product.AverageRatingValue
+            };
+
+            return response;
         }
 
         // GET: api/ProductsApi/5
@@ -105,14 +132,44 @@ namespace Compubuilt.Controllers
         // PUT: api/ProductsApi/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<IActionResult> PutProduct(int id, ProductApiModel request)
         {
-            if (id != product.ProductId)
+            if (id != request.ProductId)
             {
-                return BadRequest();
+                return BadRequest("Passed Ids don't match.");
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            var product = _context.Products.Find(id);
+            bool newEntry = false;
+
+            var validationResult = ValidateProductApiModelRequestAsync(request);
+            if(validationResult.Result != null)
+                return BadRequest(validationResult.Result);
+
+            if (product == null)
+            {
+                product = new Product()
+                {
+                    Name = request.Name,
+                    Description = request.Description,
+                    Quantity = request.Quantity,
+                    Price = request.Price,
+                    ProductCategoryId = request.ProductCategoryId,
+                    AverageRatingValue = request.AverageRatingValue
+                };
+                _context.Entry(product).State = EntityState.Added;
+                newEntry = true;
+            }
+            else
+            {
+                product.Name = request.Name;
+                product.Description = request.Description;
+                product.Quantity = request.Quantity;
+                product.Price = request.Price;
+                product.ProductCategoryId = request.ProductCategoryId;
+                product.AverageRatingValue = request.AverageRatingValue;
+                _context.Entry(product).State = EntityState.Modified;
+            }
 
             try
             {
@@ -130,22 +187,42 @@ namespace Compubuilt.Controllers
                 }
             }
 
+            if (newEntry)
+                return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+
             return NoContent();
         }
 
         // POST: api/ProductsApi
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductApiModel request)
         {
-          if (_context.Products == null)
-          {
-              return Problem("Entity set 'compubuiltContext.Products'  is null.");
-          }
-          _context.Products.Add(product);
-          await _context.SaveChangesAsync();
+            if (_context.Products == null)
+            {
+                return Problem("Entity set 'compubuiltContext.Products'  is null.");
+            }
 
-          return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+            var validationResult = ValidateProductApiModelRequestAsync(request);
+            if (validationResult.Result != null)
+                return BadRequest(validationResult.Result);
+
+            var product = new Product()
+            {
+                Name = request.Name,
+                Description = request.Description,
+                Quantity = request.Quantity,
+                Price = request.Price,
+                ProductCategoryId = request.ProductCategoryId,
+                AverageRatingValue = request.AverageRatingValue
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            request.ProductId = product.ProductId;
+
+            return CreatedAtAction("GetProduct", new { id = product.ProductId }, request);
         }
 
         // DELETE: api/ProductsApi/5
@@ -171,6 +248,20 @@ namespace Compubuilt.Controllers
         private bool ProductExists(int id)
         {
             return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
+        }
+
+        private async Task<string?> ValidateProductApiModelRequestAsync(ProductApiModel request)
+        {
+            var validationResult = request.Validate();
+            if (validationResult != null)
+                return validationResult;
+
+            var productCategory = await _context.ProductCategories.FindAsync(request.ProductCategoryId);
+
+            if (productCategory == null)
+                return "Invalid Product Category";
+
+            return null;
         }
 
     }
