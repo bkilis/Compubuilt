@@ -21,6 +21,11 @@ namespace Compubuilt.Models
         public int AddressId { get; set; }
         public int? PromotionalCodeId { get; set; }
         public decimal TotalValue { get; set; }
+        public bool? IsActive { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; } = null!;
+        public DateTime LastModifiedDate { get; set; }
+        public string LastModifiedBy { get; set; } = null!;
 
         public virtual CustomerAddress Address { get; set; } = null!;
         public virtual Customer Customer { get; set; } = null!;

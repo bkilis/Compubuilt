@@ -53,6 +53,22 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("Agreements", "Customer");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
+
                 entity.HasOne(d => d.AgreementType)
                     .WithMany(p => p.Agreements)
                     .HasForeignKey(d => d.AgreementTypeId)
@@ -69,6 +85,22 @@ namespace Compubuilt.Models
             modelBuilder.Entity<AgreementType>(entity =>
             {
                 entity.ToTable("AgreementTypes", "Customer");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
@@ -116,6 +148,22 @@ namespace Compubuilt.Models
 
                 entity.Property(e => e.CityName).HasMaxLength(100);
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.PostalCode).HasMaxLength(10);
 
                 entity.Property(e => e.StreetName).HasMaxLength(150);
@@ -132,6 +180,22 @@ namespace Compubuilt.Models
             modelBuilder.Entity<Delivery>(entity =>
             {
                 entity.ToTable("Deliveries", "Order");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.DeliveryStatusType)
                     .WithMany(p => p.Deliveries)
@@ -152,14 +216,46 @@ namespace Compubuilt.Models
 
                 entity.ToTable("DeliveryStatusTypes", "Order");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.DeliveryStatusName).HasMaxLength(50);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<DeliveryType>(entity =>
             {
                 entity.ToTable("DeliveryTypes", "Order");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.DeliveryTypeName).HasMaxLength(50);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             });
@@ -167,6 +263,22 @@ namespace Compubuilt.Models
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Orders", "Order");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.OrderNumber).HasMaxLength(50);
 
@@ -209,7 +321,23 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("OrderProducts", "Order");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.DiscountValue).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
 
@@ -230,6 +358,22 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("OrderStatusTypes", "Order");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
@@ -237,7 +381,23 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("ParameterType", "Product");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Description).HasMaxLength(200);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
@@ -245,6 +405,22 @@ namespace Compubuilt.Models
             modelBuilder.Entity<Payment>(entity =>
             {
                 entity.ToTable("Payments", "Payment");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.PaymentStatusType)
                     .WithMany(p => p.Payments)
@@ -263,12 +439,44 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("PaymentStatusTypes", "Payment");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<PaymentType>(entity =>
             {
                 entity.ToTable("PaymentTypes", "Payment");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
@@ -279,7 +487,21 @@ namespace Compubuilt.Models
 
                 entity.Property(e => e.AverageRatingValue).HasColumnType("decimal(2, 1)");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Description).HasMaxLength(4000);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasMaxLength(200);
 
@@ -296,6 +518,22 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("ProductCategories", "Product");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
@@ -303,7 +541,23 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("ProductImages", "Product");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.ImageName).HasMaxLength(150);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Url)
                     .HasMaxLength(2083)
@@ -326,12 +580,42 @@ namespace Compubuilt.Models
             {
                 entity.ToTable("ProductImageType", "Product");
 
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<ProductParameter>(entity =>
             {
-                entity.ToTable("ProductParameter", "Product");
+                entity.ToTable("ProductParameters", "Product");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Value).HasMaxLength(50);
 
@@ -351,6 +635,22 @@ namespace Compubuilt.Models
             modelBuilder.Entity<ProductReview>(entity =>
             {
                 entity.ToTable("ProductReviews", "Product");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.RatingValue).HasColumnType("decimal(2, 1)");
 
@@ -374,6 +674,22 @@ namespace Compubuilt.Models
                 entity.ToTable("PromotionalCodes", "Order");
 
                 entity.Property(e => e.Code).HasMaxLength(50);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasMaxLength(150)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
