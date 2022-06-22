@@ -21,10 +21,10 @@ namespace Compubuilt.Models
         public int ProductCategoryId { get; set; }
         public decimal? AverageRatingValue { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public string? CreatedBy { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
-        public string? LastModifiedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; } = null!;
+        public DateTime LastModifiedDate { get; set; }
+        public string LastModifiedBy { get; set; } = null!;
 
         public virtual ProductCategory ProductCategory { get; set; } = null!;
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }

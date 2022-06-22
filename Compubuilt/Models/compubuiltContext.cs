@@ -495,7 +495,9 @@ namespace Compubuilt.Models
 
                 entity.Property(e => e.Description).HasMaxLength(4000);
 
-                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.LastModifiedBy)
                     .HasMaxLength(150)
