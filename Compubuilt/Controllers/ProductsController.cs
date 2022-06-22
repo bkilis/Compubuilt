@@ -23,7 +23,9 @@ namespace Compubuilt.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var compubuiltContext = _context.Products.Include(p => p.ProductCategory);
+            var compubuiltContext = _context.Products
+                .Include(p => p.ProductCategory)
+                .Where(p => p.IsActive == true);
             return View(await compubuiltContext.ToListAsync());
         }
 
@@ -152,9 +154,11 @@ namespace Compubuilt.Controllers
                 return Problem("Entity set 'compubuiltContext.Products'  is null.");
             }
             var product = await _context.Products.FindAsync(id);
+
             if (product != null)
             {
-                _context.Products.Remove(product);
+                product.IsActive = false;
+                _context.Products.Update(product);
             }
             
             await _context.SaveChangesAsync();
@@ -196,7 +200,9 @@ namespace Compubuilt.Controllers
                     .Select(pi => pi.Url).ToList(),
                 ProductPhotoUrls = product.ProductImages
                     .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageTypeEnum.ProductGalleryPhoto)
-                    .Select(pi => pi.Url).ToList()
+                    .Select(pi => pi.Url).ToList(),
+                InStock = product.Quantity > 0 ? "checked" : "unchecked",
+                AddToCartButtonEnabled = product.Quantity > 0 ? "enabled" : "disabled"
             };
 
             return View(productPage);

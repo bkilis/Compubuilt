@@ -21,7 +21,7 @@ namespace Compubuilt.Controllers
         {
             var productList = _context.Products
                 .Include(p => p.ProductImages)
-                //.Where(p => p.IsActive == true)
+                .Where(p => p.IsActive == true)
                 .ToList();
 
             var productCatalog = new ProductCatalogViewModel { ProductList = new List<ProductOverview>()};

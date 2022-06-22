@@ -10,6 +10,10 @@
         public string ProductCategoryName { get; set; }
         public List<string> ProductPhotoThumbnailUrls { get; set; }
         public List<string> ProductPhotoUrls { get; set; }
+
+        public string InStock { get; set; }
+
+        public string AddToCartButtonEnabled { get; set; }
         
         //TODO: dodać recenzje użytkowników
 

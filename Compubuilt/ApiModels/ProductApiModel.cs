@@ -15,7 +15,7 @@ namespace Compubuilt.ApiModels
 
         public string? Validate()
         {
-            if (Description.Length > 4000)
+            if (!string.IsNullOrWhiteSpace(Description) && Description.Length > 4000)
                 return "Product description cannot exceed 4000 characters.";
             if (Price < 0)
                 return "Product price cannot be less than 0.";

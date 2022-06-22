@@ -25,7 +25,7 @@
                             <div class="product__details__pic__slider owl-carousel">
                                 @foreach (var productPhotoUrl in Model.ProductPhotoUrls)
                                 {
-                                    <img data-hash="product-4" class="product__big__img" src="~/@Html.DisplayFor(modelItem => productPhotoUrl)" alt="">
+                                    <img data-hash="product-4" class="product__big__img" src="@Html.DisplayFor(modelItem => productPhotoUrl)" alt="">
                                 }
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <span>@Html.DisplayFor(modelItem => modelItem.RatingValue)</span>
-                            <span>( 138 reviews )</span>
+                            @*<span>( 138 reviews )</span>*@
                         </div>
                         <div class="product__details__price">$ @Html.DisplayFor(modelItem => modelItem.Price) @*<span>$ @Html.DisplayFor(modelItem => modelItem.Price)</span>*@</div>
                         @*<p>Nemo enim ipsam voluptatem quia aspernatur aut odit aut loret fugit, sed quia consequuntur
@@ -56,7 +56,14 @@
                                         <input type="text" name="quantity" value="1">
                                     </div>
                                 </div>
-                                <button type="submit" class="cart-btn"> <span class="icon_bag_alt"></span> Add to cart </button>
+                                @if (@Model.AddToCartButtonEnabled == "enabled")
+                                {
+                                    <button type="submit" class="cart-btn" @Model.AddToCartButtonEnabled > <span class="icon_bag_alt"></span> Add to cart </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="cart-btn" @Model.AddToCartButtonEnabled style="background: #ababab" > <span class="icon_bag_alt"></span> Add to cart </button>
+                                }
                                 <ul>
 @*                                    <li><a href="#"><span class="icon_heart_alt"></span></a></li>
                                     <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>*@
@@ -71,12 +78,12 @@
                                     <div class="stock__checkbox">
                                         <label for="stockin">
                                             In Stock
-                                            <input type="checkbox" id="stockin" disabled checked>
+                                            <input type="checkbox" id="stockin" disabled @Model.InStock>
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
                                 </li>
-                                <li>
+@*                                <li>
                                     <span>Available color:</span>
                                     <div class="color__checkbox">
                                         <label for="red">
@@ -92,8 +99,8 @@
                                             <span class="checkmark grey-bg"></span>
                                         </label>
                                     </div>
-                                </li>
-                                <li>
+                                </li>*@
+@*                                <li>
                                     <span>Available size:</span>
                                     <div class="size__btn">
                                         <label for="xs-btn" class="active">
@@ -117,7 +124,7 @@
                                 <li>
                                     <span>Promotions:</span>
                                     <p>Free shipping</p>
-                                </li>
+                                </li>*@
                             </ul>
                         </div>
                     </div>
@@ -128,12 +135,12 @@
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
                             </li>
-                            <li class="nav-item">
+@*                            <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
-                            </li>
+                            </li>*@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
@@ -144,7 +151,7 @@
                                     nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
                                 quis, sem.</p>*@
                             </div>
-                            <div class="tab-pane" id="tabs-2" role="tabpanel">
+@*                            <div class="tab-pane" id="tabs-2" role="tabpanel">
                                 <h6>Specification</h6>
                                 <p>To jest specyfikacja produktu. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
                                     quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
@@ -169,7 +176,7 @@
                                     dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
                                     nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
                                 quis, sem.</p>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>

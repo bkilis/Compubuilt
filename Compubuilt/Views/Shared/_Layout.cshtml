@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Compubuilt</title>
+    <title>@ViewData["Title"] - LGTM Looks Good To Me</title>
 @*    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
     @*<link rel="stylesheet" href="~/Compubuilt.styles.css" asp-append-version="true" />*@
@@ -120,12 +120,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#">My Profile</a>
-                            <ul class="dropdown">
-                                <li><a asp-area="" asp-controller="" asp-action="">Order History</a></li>
-                                <li><a asp-area="" asp-controller="" asp-action="">Address Settings</a></li>
-                                <li><a asp-area="" asp-controller="Customers" asp-action="CustomerDetailsEdit">Profile Settings</a></li>
-                            </ul>
+                            <a asp-controller="Customers" asp-action="CustomerDetailsEdit">My Profile</a>
                         </li>
                         @*<li><a href="#">Blog</a></li>*@
                         @*<li><a href="#">Contact</a></li>*@
@@ -212,7 +207,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Compubuilt - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - LGTM - Looks Good To Me - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 @*    <script src="~/lib/jquery/dist/jquery.min.js"></script>

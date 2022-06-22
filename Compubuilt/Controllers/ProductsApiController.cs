@@ -25,13 +25,18 @@ namespace Compubuilt.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductApiModel>>> GetProducts()
         {
-          if (_context.Products == null)
+
+          var products = _context.Products
+              .Where(p => p.IsActive == true)
+              .ToList();
+
+          if (products == null)
           {
               return NotFound();
           }
 
           var response = new List<ProductApiModel>();
-          foreach (var product in _context.Products)
+          foreach (var product in products)
           {
               response.Add(new ProductApiModel
               {
@@ -55,12 +60,14 @@ namespace Compubuilt.Controllers
         [HttpGet("GetProductsStock/")]
         public async Task<ActionResult<GetProductsStockResponse>> GetProductsStock()
         {
-            if (_context.Products == null)
+            var products = _context.Products
+                .Where(p => p.IsActive == true)
+                .ToList();
+
+            if (products == null)
             {
                 return NotFound();
             }
-
-            var products = await _context.Products.ToListAsync();
 
             var response = new GetProductsStockResponse();
             foreach (var product in products)
@@ -80,11 +87,10 @@ namespace Compubuilt.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductApiModel>> GetProduct(int id)
         {
-            if (_context.Products == null)
-            {
-                return NotFound();
-            }
-            var product = await _context.Products.FindAsync(id);
+            //var product = await _context.Products.Where(p => p.IsActive == true)
+            //    .FindAsync(id);
+
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id && p.IsActive == true);
 
             if (product == null)
             {
@@ -113,7 +119,8 @@ namespace Compubuilt.Controllers
             {
                 return NotFound();
             }
-            var product = await _context.Products.FindAsync(id);
+            //var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id && p.IsActive == true);
 
             if (product == null)
             {
@@ -139,7 +146,9 @@ namespace Compubuilt.Controllers
                 return BadRequest("Passed Ids don't match.");
             }
 
-            var product = _context.Products.Find(id);
+            //var product = _context.Products.Find(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id && p.IsActive == true);
+
             bool newEntry = false;
 
             var validationResult = ValidateProductApiModelRequestAsync(request);
@@ -234,12 +243,13 @@ namespace Compubuilt.Controllers
                 return NotFound();
             }
             var product = await _context.Products.FindAsync(id);
+
             if (product == null)
             {
                 return NotFound();
             }
+            product.IsActive = false;
 
-            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -247,7 +257,7 @@ namespace Compubuilt.Controllers
 
         private bool ProductExists(int id)
         {
-            return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
+            return (_context.Products?.Any(e => e.ProductId == id && e.IsActive == true)).GetValueOrDefault();
         }
 
         private async Task<string?> ValidateProductApiModelRequestAsync(ProductApiModel request)
