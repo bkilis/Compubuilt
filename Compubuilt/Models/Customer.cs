@@ -14,10 +14,10 @@ namespace Compubuilt.Models
         }
 
         public int CustomerId { get; set; }
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
-        public string EmailAddress { get; set; } = null!;
-        public string PhoneNumber { get; set; } = null!;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? EmailAddress { get; set; }
+        public string? PhoneNumber { get; set; }
         public bool? IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; } = null!;
