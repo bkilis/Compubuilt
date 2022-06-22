@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<Compubuilt.Models.Product>
 
 @{
-    ViewData["Title"] = "Product Management";
+    ViewData["Title"] = "Index";
 }
-<div class="container">
 
-<h1>Product Management</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -24,6 +23,24 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AverageRatingValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedBy)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ProductCategory)
@@ -47,6 +64,24 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.AverageRatingValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedBy)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ProductCategory.ProductCategoryId)
             </td>
             <td>
@@ -58,4 +93,3 @@
 }
     </tbody>
 </table>
-</div>

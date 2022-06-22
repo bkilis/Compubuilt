@@ -1,4 +1,4 @@
-﻿@model Compubuilt.Models.ProductImage
+﻿@model Compubuilt.Models.Product
 
 @{
     ViewData["Title"] = "Details";
@@ -7,20 +7,38 @@
 <h1>Details</h1>
 
 <div>
-    <h4>ProductImage</h4>
+    <h4>Product</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageName)
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageName)
+            @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Url)
+            @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Url)
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AverageRatingValue)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AverageRatingValue)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)
@@ -53,20 +71,14 @@
             @Html.DisplayFor(model => model.LastModifiedBy)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product)
+            @Html.DisplayNameFor(model => model.ProductCategory)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.ProductId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductImageType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductImageType.ProductImageTypeId)
+            @Html.DisplayFor(model => model.ProductCategory.ProductCategoryId)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductImageId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

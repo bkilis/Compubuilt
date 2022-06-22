@@ -19,19 +19,19 @@ builder.Services.AddDbContext<compubuiltContext>(options => options.UseSqlServer
 );
 
 // Add services to the container.
-//builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddControllersWithViews(options =>
 {
-    //var policy = new AuthorizationPolicyBuilder()
-    //    .RequireAuthenticatedUser()
-    //    .Build();
-    //options.Filters.Add(new AuthorizeFilter(policy));
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
 });
 builder.Services.AddRazorPages()
     .AddRazorRuntimeCompilation()
-    //.AddMicrosoftIdentityUI()
+    .AddMicrosoftIdentityUI()
     ;
 
 //SESSION CONFIGURATION
@@ -62,8 +62,8 @@ app.UseSession();
 
 app.UseRouting();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

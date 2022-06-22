@@ -6,30 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
-using Compubuilt.ViewModels;
-using ProductImageTypeEnum = Compubuilt.Enums.ProductImageTypeEnum;
 
 namespace Compubuilt.Controllers
 {
-    public class ProductsController : Controller
+    public class Products1Controller : Controller
     {
         private readonly compubuiltContext _context;
 
-        public ProductsController(compubuiltContext context)
+        public Products1Controller(compubuiltContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: Products1
         public async Task<IActionResult> Index()
         {
-            var compubuiltContext = _context.Products
-                .Include(p => p.ProductCategory)
-                .Where(p => p.IsActive == true);
+            var compubuiltContext = _context.Products.Include(p => p.ProductCategory);
             return View(await compubuiltContext.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        // GET: Products1/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Products == null)
@@ -48,31 +44,31 @@ namespace Compubuilt.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
+        // GET: Products1/Create
         public IActionResult Create()
         {
             ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "Name");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Products1/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId,AverageRatingValue,IsActive,CreatedDate,CreatedBy,LastModifiedDate,LastModifiedBy")] Product product)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            //}
+            }
             ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "Name", product.ProductCategoryId);
             return View(product);
         }
 
-        // GET: Products/Edit/5
+        // GET: Products1/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Products == null)
@@ -89,12 +85,12 @@ namespace Compubuilt.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
+        // POST: Products1/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId,AverageRatingValue,IsActive,CreatedDate,CreatedBy,LastModifiedDate,LastModifiedBy")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -125,7 +121,7 @@ namespace Compubuilt.Controllers
             return View(product);
         }
 
-        // GET: Products/Delete/5
+        // GET: Products1/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Products == null)
@@ -144,7 +140,7 @@ namespace Compubuilt.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
+        // POST: Products1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -154,11 +150,9 @@ namespace Compubuilt.Controllers
                 return Problem("Entity set 'compubuiltContext.Products'  is null.");
             }
             var product = await _context.Products.FindAsync(id);
-
             if (product != null)
             {
-                product.IsActive = false;
-                _context.Products.Update(product);
+                _context.Products.Remove(product);
             }
             
             await _context.SaveChangesAsync();
@@ -168,44 +162,6 @@ namespace Compubuilt.Controllers
         private bool ProductExists(int id)
         {
           return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
-        }
-
-        public async Task<IActionResult> ProductPage(int? id)
-        {
-            if (id == null || _context.Products == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products
-                .Include(p => p.ProductCategory)
-                .Include(p => p.ProductImages)
-                .FirstOrDefaultAsync(p => p.ProductId == id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            var productPage = new ProductPageViewModel
-            {
-                ProductId = product.ProductId,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                RatingValue = product.AverageRatingValue,
-                ProductCategoryName = product.ProductCategory.Name,
-                ProductPhotoThumbnailUrls = product.ProductImages
-                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageTypeEnum.ProductGalleryPhoto)
-                    .Select(pi => pi.Url).ToList(),
-                ProductPhotoUrls = product.ProductImages
-                    .Where(pi => pi.ProductId == product.ProductId && pi.ProductImageTypeId == (int)ProductImageTypeEnum.ProductGalleryPhoto)
-                    .Select(pi => pi.Url).ToList(),
-                InStock = product.Quantity > 0 ? "checked" : "unchecked",
-                AddToCartButtonEnabled = product.Quantity > 0 ? "enabled" : "disabled"
-            };
-
-            return View(productPage);
         }
     }
 }

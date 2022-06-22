@@ -17,11 +17,12 @@ namespace Compubuilt.Controllers
         }
 
         // GET: ProductCatalogController
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
             var productList = _context.Products
                 .Include(p => p.ProductImages)
                 .Where(p => p.IsActive == true)
+                .Where(p => !id.HasValue || p.ProductCategoryId == id)
                 .ToList();
 
             var productCatalog = new ProductCatalogViewModel { ProductList = new List<ProductOverview>()};

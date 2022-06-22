@@ -58,7 +58,7 @@ namespace Compubuilt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductImageId,ProductId,ImageName,Url,ProductImageTypeId")] ProductImage productImage)
+        public async Task<IActionResult> Create([Bind("ProductImageId,ProductId,ImageName,Url,ProductImageTypeId,IsActive,CreatedDate,CreatedBy,LastModifiedDate,LastModifiedBy")] ProductImage productImage)
         {
             //if (ModelState.IsValid)
             //{
@@ -66,9 +66,9 @@ namespace Compubuilt.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             //}
-            //ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", productImage.ProductId);
-            //ViewData["ProductImageTypeId"] = new SelectList(_context.ProductImageTypes, "ProductImageTypeId", "ProductImageTypeId", productImage.ProductImageTypeId);
-            //return View(productImage);
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Name", productImage.ProductId);
+            ViewData["ProductImageTypeId"] = new SelectList(_context.ProductImageTypes, "ProductImageTypeId", "Name", productImage.ProductImageTypeId);
+            return View(productImage);
         }
 
         // GET: ProductImages/Edit/5
@@ -94,15 +94,15 @@ namespace Compubuilt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductImageId,ProductId,ImageName,Url,ProductImageTypeId")] ProductImage productImage)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductImageId,ProductId,ImageName,Url,ProductImageTypeId,IsActive,CreatedDate,CreatedBy,LastModifiedDate,LastModifiedBy")] ProductImage productImage)
         {
             if (id != productImage.ProductImageId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(productImage);
@@ -120,7 +120,7 @@ namespace Compubuilt.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Name", productImage.ProductId);
             ViewData["ProductImageTypeId"] = new SelectList(_context.ProductImageTypes, "ProductImageTypeId", "Name", productImage.ProductImageTypeId);
             return View(productImage);

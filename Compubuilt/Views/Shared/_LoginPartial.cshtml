@@ -1,13 +1,13 @@
 ﻿@using System.Security.Principal
 
-<div class="header__right__auth">
+@*<div class="header__right__auth">*@
     @if (User.Identity?.IsAuthenticated == true)
     {
-        <span class="navbar-text text-dark">Hello @User.Identity?.Name!</span>
+        <span class="navbar-text text-dark">Hello @User.Identity?.Name</span>
         <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
     }
     else
     {
         <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn"> <span class="icon_profile"></span> Sign in</a>
     }
-</div>
+@*</div>*@

@@ -45,7 +45,16 @@
         <p>Payment method</p>
         @Html.DropDownListFor(x => Model.SelectedPaymentTypeId, new SelectList(Model.OrderPaymentTypes, "PaymentTypeId", "PaymentTypeName"), htmlAttributes: new { @class = "form-control", id = "SelectedPaymentTypeId" })
         <br/>
-        <input type="submit" value="Place order" class="site-btn" />
+        if(@Model.CustomerHasAddressInformation == "enabled")
+        {
+            <input type="submit" value="Place order" @Model.CustomerHasAddressInformation class="site-btn" />
+        }
+        else
+        {
+            <p>You have to provide address information before placing an order.</p>
+            <input type="submit" value="Place order" @Model.CustomerHasAddressInformation class="site-btn" />
+        }
+
         </form>
     </div>
 @*    <a class="site-btn" asp-controller="Orders" asp-action="PlaceOrder" asp-for="@Model">Place order</a>*@

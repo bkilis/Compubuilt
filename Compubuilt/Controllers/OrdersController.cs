@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Compubuilt.Enums;
 using Compubuilt.Extensions;
@@ -44,9 +45,11 @@ namespace Compubuilt.Controllers
         {
             try
             {
-                //TODO: zaktualizować po podłączeniu do AAD
-                var userId = 1;
-                var userAddressId = 1;
+                var loggedUserEmail = GetLoggedUserEmail();
+                var customerId = _context.Customers.FirstOrDefaultAsync(c => c.EmailAddress == loggedUserEmail).Id;
+
+                //var userAddressId = 1;
+                var customerAddressId = _context.CustomerAddresses.FirstOrDefaultAsync(ca => ca.CustomerId == customerId).Result.CustomerAddressId;
 
                 var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
                 if (shoppingCartSession == null)
@@ -67,8 +70,8 @@ namespace Compubuilt.Controllers
                 var order = new Order();
                 order.PlacementDate = DateTime.Now;
                 order.OrderStatusTypeId = (int)OrderStatusTypeEnum.New;
-                order.CustomerId = userId;
-                order.AddressId = userAddressId;
+                order.CustomerId = customerId;
+                order.AddressId = customerAddressId;
 
                 decimal promotionalCodeDiscountValue = 0;
 
@@ -308,5 +311,8 @@ namespace Compubuilt.Controllers
         {
           return (_context.Orders?.Any(e => e.OrderId == id)).GetValueOrDefault();
         }
+
+        private string GetLoggedUserEmail() => User.Identity.Name;
+
     }
 }

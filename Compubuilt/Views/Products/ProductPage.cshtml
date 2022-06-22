@@ -17,7 +17,7 @@
                             @foreach (var productPhotoThumbnailUrl in Model.ProductPhotoThumbnailUrls)
                             {
                                 <a class="pt" href="#product-4">
-                                    <img src="~/@Html.DisplayFor(modelItem => productPhotoThumbnailUrl)" alt="">
+                                    <img src="@Html.DisplayFor(modelItem => productPhotoThumbnailUrl)" alt="">
                                 </a>
                             }
                         </div>

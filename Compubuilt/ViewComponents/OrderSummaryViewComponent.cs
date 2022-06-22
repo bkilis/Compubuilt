@@ -17,6 +17,11 @@ namespace Compubuilt.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            var loggedUserEmail = GetLoggedUserEmail();
+            var customer =  await _context.Customers.FirstOrDefaultAsync(c => c.EmailAddress == User.Identity.Name);
+
+            var customerAddress = await _context.CustomerAddresses.FirstOrDefaultAsync(ca => ca.CustomerId == customer.CustomerId);
+
             var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
 
             var products = _context.Products
@@ -74,7 +79,12 @@ namespace Compubuilt.ViewComponents
                                                     orderSummary.TotalValue * ((decimal)promotionalCode.DiscountValue / 100);
             }
 
+            orderSummary.CustomerHasAddressInformation = customerAddress == null ? "disabled" : "enabled";
+
             return View("OrderSummary", orderSummary);
         }
+
+        private string GetLoggedUserEmail() => User.Identity.Name;
+
     }
 }

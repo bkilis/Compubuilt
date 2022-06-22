@@ -17,6 +17,8 @@ namespace Compubuilt.ViewModels
         public int SelectedOrderDeliveryTypeId { get; set; }
         public int SelectedPaymentTypeId { get; set; }
 
+        public string CustomerHasAddressInformation { get; set; }
+
         public List<OrderDeliveryType> OrderDeliveryTypes { get; set; }
         public List<OrderPaymentType> OrderPaymentTypes { get; set; }
     }
