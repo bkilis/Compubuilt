@@ -12,9 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
 using Compubuilt.ViewModels;
 using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Compubuilt.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly compubuiltContext _context;
@@ -24,6 +26,7 @@ namespace Compubuilt.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: Orders
         public async Task<IActionResult> Index()
         {
@@ -46,10 +49,10 @@ namespace Compubuilt.Controllers
             try
             {
                 var loggedUserEmail = GetLoggedUserEmail();
-                var customerId = _context.Customers.FirstOrDefaultAsync(c => c.EmailAddress == loggedUserEmail).Id;
+                var customer = await _context.Customers.FirstOrDefaultAsync(c => c.EmailAddress == loggedUserEmail);
 
                 //var userAddressId = 1;
-                var customerAddressId = _context.CustomerAddresses.FirstOrDefaultAsync(ca => ca.CustomerId == customerId).Result.CustomerAddressId;
+                var customerAddress = await _context.CustomerAddresses.FirstOrDefaultAsync(ca => ca.CustomerId == customer.CustomerId);
 
                 var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
                 if (shoppingCartSession == null)
@@ -70,8 +73,8 @@ namespace Compubuilt.Controllers
                 var order = new Order();
                 order.PlacementDate = DateTime.Now;
                 order.OrderStatusTypeId = (int)OrderStatusTypeEnum.New;
-                order.CustomerId = customerId;
-                order.AddressId = customerAddressId;
+                order.CustomerId = customer.CustomerId;
+                order.AddressId = customerAddress.CustomerAddressId;
 
                 decimal promotionalCodeDiscountValue = 0;
 
@@ -137,8 +140,7 @@ namespace Compubuilt.Controllers
                 order.DeliveryId = delivery.DeliveryId;
                 await _context.SaveChangesAsync();
 
-
-                //TODO: przekazać tutaj we viewbagu nazwę złożonego zamówienia
+                ViewData["OrderNumber"] = order.OrderNumber;
 
                 return View();
             }

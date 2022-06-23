@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Compubuilt.Controllers
 {
+    [Authorize]
     public class ShoppingCartController : Controller
     {
         private readonly compubuiltContext _context;
@@ -18,6 +19,7 @@ namespace Compubuilt.Controllers
             _context = context;
         }
         // GET: ShoppingCartController
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var shoppingCartSession = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
@@ -71,6 +73,7 @@ namespace Compubuilt.Controllers
             return View(shoppingCartViewModel);
         }
 
+        [AllowAnonymous]
         public IActionResult AddItemToCart(int? id, int? quantity)
         {
             if (id == null || quantity == null || quantity < 1)
@@ -80,6 +83,11 @@ namespace Compubuilt.Controllers
                 return NotFound();
 
             byte[] cartId;
+
+            var product = _context.Products
+                .FirstOrDefault(m => m.ProductId == id);
+
+            TempData["ProductName"] = product.Name;
 
             if (!HttpContext.Session.TryGetValue("cartId", out cartId))
             {
@@ -96,7 +104,7 @@ namespace Compubuilt.Controllers
                     }
                 });
             }
-            else //if item alreay is in the cart quantity ++
+            else
             {
                 var shoppingCart = HttpContext.Session.Get<ShoppingCartSessionModel>("cartContents");
 
@@ -122,6 +130,7 @@ namespace Compubuilt.Controllers
 
         }
 
+        [AllowAnonymous]
         public IActionResult ApplyPromotionalCode(string code)
         {
             if(code == null)
@@ -135,6 +144,8 @@ namespace Compubuilt.Controllers
 
             if (promotionalCode == null)
                 return RedirectToAction(nameof(Index));
+
+            TempData["PromotionalCode"] = promotionalCode.Name;
 
             if (!HttpContext.Session.TryGetValue("cartId", out cartId))
             {
@@ -159,6 +170,7 @@ namespace Compubuilt.Controllers
         }
 
         // GET: ShoppingCartController/Delete/5
+        [AllowAnonymous]
         public IActionResult Delete(int id)
         {
             byte[] cartId;

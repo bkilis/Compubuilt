@@ -1,15 +1,11 @@
 ﻿@model IEnumerable<Compubuilt.Models.Order>
 
 @{
-    ViewData["Title"] = "Order management";
+    ViewData["Title"] = "Order History";
 }
+
 <div class="container">
 
-<h1>Order management</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -37,6 +33,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.PromotionalCode)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalValue)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -53,21 +52,22 @@
                 @Html.DisplayFor(modelItem => item.CompletionDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
+                @Html.DisplayFor(modelItem => item.Customer.FirstName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Delivery.DeliveryId)
+                @Html.DisplayFor(modelItem => item.Delivery.DeliveryType.DeliveryTypeName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderStatusType.OrderStatusTypeId)
+                @Html.DisplayFor(modelItem => item.OrderStatusType.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Payment.PaymentId)
+                @Html.DisplayFor(modelItem => item.Payment.PaymentType.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                @Html.DisplayFor(modelItem => item.PromotionalCode.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalValue)
             </td>
         </tr>
 }

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
 using Compubuilt.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Compubuilt.Controllers
 {
+    [Authorize]
     public class CustomerAddressesController : Controller
     {
         private readonly compubuiltContext _context;
@@ -167,21 +169,35 @@ namespace Compubuilt.Controllers
 
         public async Task<IActionResult> SaveAddressChanges(CustomerAddressEditViewModel updatedCustomerAddress)
         {
-            //if(customerAddress == null)
-            //    return NotFound();
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.EmailAddress == User.Identity.Name);
 
             var customerAddress = await _context.CustomerAddresses
-                .Include(c => c.Customer)
-                .FirstOrDefaultAsync(m => m.CustomerAddressId == updatedCustomerAddress.CustomerAddressId);
+                //.Include(c => c.Customer)
+                .FirstOrDefaultAsync(m => m.CustomerId == customer.CustomerId);
 
-            customerAddress.StreetName = updatedCustomerAddress.StreetName;
-            customerAddress.StreetNumber = updatedCustomerAddress.StreetNumber;
-            customerAddress.CityName = updatedCustomerAddress.CityName;
-            customerAddress.PostalCode = updatedCustomerAddress.PostalCode;
+            if (customerAddress != null)
+            {
+                customerAddress.StreetName = updatedCustomerAddress.StreetName;
+                customerAddress.StreetNumber = updatedCustomerAddress.StreetNumber;
+                customerAddress.CityName = updatedCustomerAddress.CityName;
+                customerAddress.PostalCode = updatedCustomerAddress.PostalCode;
+                _context.Update(customerAddress);
+            }
+            else
+            {
+                var newCustomerAddress = new CustomerAddress
+                {
+                    StreetName = updatedCustomerAddress.StreetName,
+                    StreetNumber = updatedCustomerAddress.StreetNumber,
+                    CityName = updatedCustomerAddress.CityName,
+                    PostalCode = updatedCustomerAddress.PostalCode,
+                    CustomerId = customer.CustomerId
+                };
+                _context.Add(newCustomerAddress);
+            }
 
             try
             {
-                _context.Update(customerAddress);
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)

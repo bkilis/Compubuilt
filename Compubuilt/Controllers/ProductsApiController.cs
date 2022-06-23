@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
 using Compubuilt.ApiModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Compubuilt.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class ProductsApiController : ControllerBase
     {
         private readonly compubuiltContext _context;

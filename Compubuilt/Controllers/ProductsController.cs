@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
 using Compubuilt.ViewModels;
 using ProductImageTypeEnum = Compubuilt.Enums.ProductImageTypeEnum;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Compubuilt.Controllers
 {
+    [Authorize/*(Roles="ShopAdministrator")*/]
     public class ProductsController : Controller
     {
         private readonly compubuiltContext _context;
@@ -60,11 +62,11 @@ namespace Compubuilt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId,AverageRatingValue,IsActive,CreatedDate,CreatedBy,LastModifiedDate,LastModifiedBy")] Product product)
         {
             //if (ModelState.IsValid)
             //{
-                _context.Add(product);
+            _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             //}
@@ -94,7 +96,7 @@ namespace Compubuilt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Quantity,Price,ProductCategoryId,AverageRatingValue,IsActive,CreatedDate,CreatedBy,LastModifiedDate,LastModifiedBy")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -170,6 +172,7 @@ namespace Compubuilt.Controllers
           return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> ProductPage(int? id)
         {
             if (id == null || _context.Products == null)

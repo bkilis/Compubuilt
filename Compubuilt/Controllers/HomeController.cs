@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Compubuilt.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,6 +19,7 @@ namespace Compubuilt.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             GetOrCreateCustomer();

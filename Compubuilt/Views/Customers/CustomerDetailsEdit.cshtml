@@ -14,28 +14,15 @@
     <div class="tab-content">
         <div class="tab-pane active" id="tabs-1" role="tabpanel">
             <h6>Description</h6>
-
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
-                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
-                quis, sem.</p>
+            @await Component.InvokeAsync("CustomerInformation")
         </div>
         <div class="tab-pane" id="tabs-2" role="tabpanel">
-            <h6>Specification</h6>
+            <h6></h6>
             @await Component.InvokeAsync("CustomerAddressEdit")
         </div>
         <div class="tab-pane" id="tabs-3" role="tabpanel">
-            <h6>Reviews ( 2 )</h6>
-            <p>To są recenzje produktu. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
-                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
-                Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
-                voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
-                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
-                consequat massa quis enim.</p>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
-                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
-                quis, sem.</p>
+            <h6>Order History</h6>
+            @await Component.InvokeAsync("OrderHistory")
         </div>
     </div>
 </div>

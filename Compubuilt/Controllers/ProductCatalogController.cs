@@ -1,5 +1,6 @@
 ﻿using Compubuilt.Models;
 using Compubuilt.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using ProductImageTypeEnum = Compubuilt.Enums.ProductImageTypeEnum;
 
 namespace Compubuilt.Controllers
 {
+    [Authorize]
     public class ProductCatalogController : Controller
     {
         private readonly compubuiltContext _context;
@@ -17,6 +19,7 @@ namespace Compubuilt.Controllers
         }
 
         // GET: ProductCatalogController
+        [AllowAnonymous]
         public ActionResult Index(int? id)
         {
             var productList = _context.Products

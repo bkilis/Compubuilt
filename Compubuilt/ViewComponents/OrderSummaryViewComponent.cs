@@ -17,7 +17,6 @@ namespace Compubuilt.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var loggedUserEmail = GetLoggedUserEmail();
             var customer =  await _context.Customers.FirstOrDefaultAsync(c => c.EmailAddress == User.Identity.Name);
 
             var customerAddress = await _context.CustomerAddresses.FirstOrDefaultAsync(ca => ca.CustomerId == customer.CustomerId);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Compubuilt.Models
 {
@@ -14,9 +15,17 @@ namespace Compubuilt.Models
         }
 
         public int CustomerId { get; set; }
+
+        [Display(Name="Name")]
         public string? FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
         public string? LastName { get; set; }
+
+        [Display(Name = "Email Address")]
         public string? EmailAddress { get; set; }
+
+        [Display(Name = "Phone Number")]
         public string? PhoneNumber { get; set; }
         public bool? IsActive { get; set; }
         public DateTime CreatedDate { get; set; }

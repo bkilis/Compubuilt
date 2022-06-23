@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Compubuilt.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Compubuilt.Controllers
 {
+    [Authorize]
     public class PaymentTypesController : Controller
     {
         private readonly compubuiltContext _context;
